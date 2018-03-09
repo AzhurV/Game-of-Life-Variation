@@ -73,8 +73,11 @@ main:
 	move 	$a1, $s0
 	li	$a2, ASCII_A
 	jal 	prompt_cells
-	
 
+	la	$a0, board_1
+	move	$a1, $s0
+	li	$a2, ASCII_B
+	jal 	prompt_cells
 	
 
 

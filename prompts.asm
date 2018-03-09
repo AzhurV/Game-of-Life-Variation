@@ -152,8 +152,13 @@ prompt_cells:
 	move	$s1, $a1
 	move	$s2, $a2
 
+
 	li	$v0, PRINT_STRING
 	la	$a0, live_cells_prompt
+	
+	addi	$t0, $a0, 38		#adjust ASCII character at prompt
+	sb	$s2, 0($t0)
+	
 	syscall
 	
 	li 	$v0, READ_INT
@@ -193,16 +198,15 @@ locations_loop:
 	syscall
 	move	$s5, $v0
 
-	move	$t9, $s1
-	slt	$t0, $s4, $zero
+	slt	$t0, $s4, $zero		#check for negative indices
 	slt	$t1, $s5, $zero
-	slt	$t2, $t9, $s4
-	slt	$t3, $t9, $s5
-
 	or	$t0, $t0, $t1
-	or	$t2, $t2, $t3
-	or	$t0, $t0, $t2
 	bne	$t0, $zero, coord_error
+
+	slt	$t0, $s4, $s1		#check for indices that are too large
+	slt	$t1, $s5, $s1
+	and	$t0, $t0, $t1
+	beq	$t0, $zero, coord_error
 
 	mul	$t0, $s1, $s4		#get proper offset into 1-D array
 	add	$t1, $s0, $t0
