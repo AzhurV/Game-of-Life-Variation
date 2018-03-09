@@ -1,0 +1,151 @@
+#
+# FILE:         prompts.asm
+# AUTHOR:       avv8047 : Azhur Viano
+#
+# DESCRIPTION:
+#	Module for prompting user input for the Game of Life
+#	simulation program	
+#
+# ARGUMENTS:
+#	None
+#
+
+
+#NUMERIC CONSTANTS
+MIN_BOARD_SIZE = 4
+MAX_BOARD_SIZE = 30
+MIN_GENERATIONS = 0
+MAX_GENERATIONS = 20
+PRINT_STRING 	= 4	
+READ_INT 	= 5	
+	
+
+#PROMPT STRINGS
+	.data	
+	.align 0
+
+size_prompt:
+	.asciiz "Enter board size: "
+generation_prompt:
+	.asciiz "Enter number of generations to run: "
+live_cells_prompt:
+	.asciiz "Enter number of live cells for colony A: "
+locations_prompt:
+	.asciiz "Start entering locations\n"
+
+illegal_size:
+	.asciiz "\nWARNING: illegal board size, try again: "
+illegal_generations:
+	.asciiz "\nWARNING: illegal number of generations, try again: "
+illegal_live_cells:
+	.asciiz "\nWARNING: illegal number of live cells, try again: "
+illegal_point:
+	.asciiz "\nERROR: illegal point location\n"
+
+
+#PROMPT ROUTINES
+
+	.text
+	.align 2
+	.globl prompt_board_size
+	.globl prompt_generations
+
+
+#----------------------------------------
+#Name:		prompt_board_size
+#Description: 	prompt the user for the board size
+#params: 	none
+#
+#returns:	v0: the size of the board entered
+#Destroys
+
+prompt_board_size:
+	addi 	$sp, $sp, -4
+	sw 	$ra, 0($sp)
+	li 	$v0, PRINT_STRING
+	la	$a0, size_prompt
+	syscall
+	li 	$v0, READ_INT
+	syscall
+
+bad_size_check:
+	slti 	$t0, $v0, MIN_BOARD_SIZE
+	li	$t2, MAX_BOARD_SIZE
+	slt	$t1, $t2, $v0
+	or	$t2, $t0, $t1
+	beq 	$t2, $zero, prompt_board_done
+
+	li	$v0, PRINT_STRING
+	la	$a0, illegal_size
+	syscall
+	li 	$v0, READ_INT
+	syscall
+	j 	bad_size_check
+	
+prompt_board_done:
+	lw	$ra, 0($sp)
+	addi	$sp, $sp, 4
+	jr	$ra
+
+#----------------------------------------
+#Name: 		prompt_generations
+#Description: 	prompt the user for the number of generations
+#params:	none
+#
+#returns: 	v0: the number of generations entered
+
+#destroys
+
+prompt_generations:
+	addi 	$sp, $sp, -4
+	sw 	$ra, 0($sp)
+
+	li	$v0, PRINT_STRING
+	la	$a0, generation_prompt
+	syscall
+
+	li 	$v0, READ_INT
+	syscall
+
+bad_generation_check:
+	slti	$t0, $v0, MIN_GENERATIONS
+	li 	$t2, MAX_GENERATIONS
+	slt	$t1, $t2, $v0
+	or	$t2, $t0, $t1
+	beq 	$t2, $zero, prompt_generations_done
+
+	li 	$v0, PRINT_STRING
+	la	$a0, illegal_generations
+	syscall
+
+	li	$v0, READ_INT
+	syscall
+	j 	bad_generation_check
+
+prompt_generations_done:
+	lw	$ra, 0($sp)
+	addi 	$sp, $sp, 4
+	jr	$ra
+
+#----------------------------------------
+#Name:	prompt_cells
+#Description:	prompt the user for the number of live
+#		cells and their locations	
+#params:	a0 the address of the board to use
+#		a1 the size of the board
+#		a2 the ASCII character code used to fill the board
+#returns:	none
+
+prompt_cells:
+	addi	$sp, $sp, -20
+	sw	$s0, 0($sp)
+	sw	$s1, 4($sp)
+	sw	$s2, 8($sp)
+	sw	$s3, 12($sp)
+	sw	$ra, 16($sp)
+
+	move	$s0, $a0
+	move	$s1, $a1
+	move	$s2, $a2
+
+	

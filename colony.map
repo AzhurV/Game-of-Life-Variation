@@ -1,0 +1,57 @@
+Load map
+========
+
+Module:  colony.obj
+ Text segment:  72 bytes, load point 0x00400000
+ Data segment:  1872 bytes, load point 0x10000000
+ Symbols:
+                     Name Section Mode    Value
+                  ASCII_A          A   0x00000041
+                  ASCII_B          A   0x00000042
+                 READ_INT          A   0x00000005
+                  board_1   Data   R   0x10000000
+                  board_2   Data   R   0x10000384
+             PRINT_STRING          A   0x00000004
+                     main   Text   RG  0x00400000
+                   banner   Data   R   0x10000708
+                main_done   Text   R   0x0040003c
+                PRINT_INT          A   0x00000001
+
+Module:  prompts.obj
+ Text segment:  496 bytes, load point 0x00400048
+ Data segment:  304 bytes, load point 0x10000750
+ Symbols:
+                     Name Section Mode    Value
+     bad_generation_check   Text   R   0x004000c4
+              size_prompt   Data   R   0x10000750
+          MIN_GENERATIONS          A   0x00000000
+        prompt_board_size   Text   RG  0x00400048
+        live_cells_prompt   Data   R   0x10000788
+       illegal_live_cells   Data   R   0x1000082b
+                 READ_INT          A   0x00000005
+          bad_alive_check   Text   R   0x00400148
+      illegal_generations   Data   R   0x100007f6
+           locations_done   Text   R   0x00400210
+        generation_prompt   Data   R   0x10000763
+              coord_error   Text   R   0x004001fc
+           MIN_BOARD_SIZE          A   0x00000004
+             PRINT_STRING          A   0x00000004
+            illegal_point   Data   R   0x1000085f
+        prompt_board_done   Text   R   0x00400098
+         prompt_locations   Text   R   0x00400180
+         locations_prompt   Data   R   0x100007b2
+             prompt_cells   Text   RG  0x00400100
+  prompt_generations_done   Text   R   0x004000f4
+           bad_size_check   Text   R   0x00400068
+           locations_loop   Text   R   0x00400194
+       prompt_generations   Text   RG  0x004000a4
+          MAX_GENERATIONS          A   0x00000014
+           MAX_BOARD_SIZE          A   0x0000001e
+             illegal_size   Data   R   0x100007cc
+
+Module:  r2k_startup.obj
+ Text segment:  36 bytes, load point 0x00400238
+ Symbols:
+                     Name Section Mode    Value
+                SYS_EXIT2          A   0x00000011
+           __r2k__entry__   Text   RG  0x0040023c

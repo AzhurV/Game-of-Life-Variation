@@ -1,0 +1,129 @@
+   1 0000               #
+   2 0000               # FILE:         $File$
+   3 0000               # AUTHOR:       avv8047 : Azhur Viano
+   4 0000               #
+   5 0000               # DESCRIPTION:
+   6 0000               #	Program to run a simulation of a variation of
+   7 0000               #	Conway's Game of Life
+   8 0000               #
+   9 0000               # ARGUMENTS:
+  10 0000               #	None
+  11 0000               #
+  12 0000               # INPUT:
+  13 0000               #	 Board size, generations to run, number of live cells for
+  14 0000               #	 first colony, list of coordinates for first colony (each
+  15 0000               #	 number seperated by a newline), number of live cells for	
+  16 0000               #	 second colony, list of coordinates for live cells in 
+  17 0000               # 	 second colony
+  18 0000               	
+  19 0000               # OUTPUT:
+  20 0000               #	The board of cells at each generation
+  21 0000               #	
+  22 0000               	
+  23 0000               
+  24 0000               #NUMERIC CONSTANTS
+  25 0000               
+  26 0000               PRINT_INT 	= 1
+  27 0000               PRINT_STRING 	= 4	
+  28 0000               READ_INT 	= 5
+  29 0000               ASCII_A 	= 65	
+  30 0000               ASCII_B 	= 66
+  31 0000               
+  32 0000               	
+  33 0000               #DATA AREAS
+  34 0000               	.data
+  35 0000               	.align 0
+  36 0000               board_1:
+  37 0000 00      		.byte 0:900
+     0001 00      
+     0002 00      
+     0003 00      
+     0004 00      
+     0005 00      
+  38 0384               board_2:
+  39 0384 00      		.byte 0:900
+     0385 00      
+     0386 00      
+     0387 00      
+     0388 00      
+     0389 00      
+  40 0708               	
+  41 0708               
+  42 0708               banner:
+  43 0708 2A2A2A2A		.ascii "**********************\n"
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A0A  
+  44 071f 2A2A2A2A		.ascii "****    Colony    ****\n"
+          20202020
+          436F6C6F
+          6E792020
+          20202A2A
+          2A2A0A  
+  45 0736 2A2A2A2A		.asciiz "**********************\n"
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A2A2A
+          2A2A0A00
+  46 074e               
+  47 074e               
+  48 074e               
+  49 074e               
+  50 0000               	.text
+  51 0000               	.align 2
+  52 0000               	.globl main
+  53 0000               	.globl prompt_board_size
+  54 0000               	.globl prompt_generations
+  55 0000               	.globl prompt_cells
+  56 0000               
+  57 0000               main:
+  58 0000 23BDFFFC		addi 	$sp, $sp, -4
+  59 0004 AFBF0000		sw	$ra, 0($sp)
+  60 0008 34020004		li 	$v0, PRINT_STRING
+  61 000c 3C040000		la	$a0, banner
+     0010 34840000
+  62 0014 0000000C		syscall
+  63 0018               
+  64 0018 0C000000		jal	prompt_board_size
+  65 001c               
+  66 001c 00408021		move	$s0, $v0		#s0 = board size
+  67 0020               
+  68 0020 0C000000		jal 	prompt_generations
+  69 0024               
+  70 0024 00408821		move	$s1, $v0		#s1 = generations
+  71 0028               
+  72 0028 3C040000		la 	$a0, board_1
+     002c 34840000
+  73 0030 02002821		move 	$a1, $s0
+  74 0034 34060041		li	$a2, ASCII_A
+  75 0038 0C000000		jal 	prompt_cells
+  76 003c               	
+  77 003c               
+  78 003c               	
+  79 003c               
+  80 003c               
+  81 003c               main_done:
+  82 003c 8FBF0000		lw	$ra, 0($sp)
+  83 0040 23BD0004		addi	$sp, 4
+  84 0044 03E00008		jr	$ra
+  85 0048               
+  86 0048               	
+  87 0048               	
+
+
+ASCII_A             = 00000041   
+ASCII_B             = 00000042   
+PRINT_INT           = 00000001   
+PRINT_STRING        = 00000004   
+READ_INT            = 00000005   
+banner                00000708 R  data 
+board_1               00000000 R  data 
+board_2               00000384 R  data 
+main                  00000000 RG text 
+main_done             0000003C R  text 
+prompt_board_size     ******** XG
+prompt_cells          ******** XG
+prompt_generations    ******** XG
