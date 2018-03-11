@@ -53,6 +53,8 @@ banner:
 	.globl prompt_board_size
 	.globl prompt_generations
 	.globl prompt_cells
+	.globl init_display
+	.globl print_board
 
 main:
 	addi 	$sp, $sp, -4
@@ -78,6 +80,14 @@ main:
 	move	$a1, $s0
 	li	$a2, ASCII_B
 	jal 	prompt_cells
+
+	move	$a0, $s0
+	jal 	init_display
+
+	la	$a0, board_1
+	move	$a1, $s0
+	jal 	print_board
+	
 	
 
 

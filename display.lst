@@ -1,0 +1,219 @@
+   1 0000               #
+   2 0000               # FILE:         display.asm
+   3 0000               # AUTHOR:       avv8047 : Azhur Viano
+   4 0000               #
+   5 0000               # DESCRIPTION:
+   6 0000               #	Module for displaying the board
+   7 0000               #
+   8 0000               	
+   9 0000               
+  10 0000               
+  11 0000               #NUMERIC CONSTANTS
+  12 0000               PRINT_STRING = 	4
+  13 0000               ASCII_PLUS = 43
+  14 0000               ASCII_MIN = 45	
+  15 0000               ASCII_BAR = 124
+  16 0000               ASCII_SPACE = 32
+  17 0000               ASCII_NEWLINE = 10
+  18 0000               ROW_OFFSET = 30	
+  19 0000               
+  20 0000               	
+  21 0000               
+  22 0000               	
+  23 0000               	.data
+  24 0000               	.align 0
+  25 0000               #buffer used to print the board itself
+  26 0000               buffer:
+  27 0000 00000000		.space 34
+          00000000
+          00000000
+          00000000
+          00000000
+          00000000
+  28 0022               #buffer used to print the top and bottom of the board
+  29 0022               edge_buffer:
+  30 0022 00000000		.space 34
+          00000000
+          00000000
+          00000000
+          00000000
+          00000000
+  31 0044               
+  32 0000               	.text
+  33 0000               	.align 2
+  34 0000               	.globl init_display
+  35 0000               	.globl print_board
+  36 0000               
+  37 0000               #----------------------------------------
+  38 0000               #Name:		init_display
+  39 0000               #Description: 	initialize buffers used for display
+  40 0000               #params: 	a0 the size of the board that will be displayed
+  41 0000               #returns:	none
+  42 0000               #Destroys
+  43 0000               
+  44 0000               init_display:
+  45 0000               
+  46 0000 3C090000		la	$t1, edge_buffer
+     0004 35290000
+  47 0008 3408002B		li	$t0, ASCII_PLUS
+  48 000c A1280000		sb	$t0, 0($t1)
+  49 0010 21290001		addi	$t1, $t1, 1
+  50 0014               
+  51 0014 00805021		move	$t2, $a0
+  52 0018 340B002D		li	$t3, ASCII_MIN
+  53 001c               
+  54 001c               edge_fill_center:
+  55 001c 11400004		beq	$t2, $zero, edge_done
+  56 0020               
+  57 0020 A12B0000		sb	$t3, 0($t1)
+  58 0024 21290001		addi	$t1, $t1, 1
+  59 0028 214AFFFF		addi	$t2, $t2, -1
+  60 002c 08000007		j 	edge_fill_center
+  61 0030               
+  62 0030               edge_done:
+  63 0030 A1280000		sb	$t0, 0($t1)
+  64 0034 21290001		addi	$t1, $t1, 1
+  65 0038 340B000A		li	$t3, ASCII_NEWLINE
+  66 003c A12B0000		sb	$t3, 0($t1)
+  67 0040 21290001		addi	$t1, $t1, 1
+  68 0044 A1200000		sb	$zero, 0($t1)
+  69 0048               
+  70 0048 3C090000		la	$t1, buffer
+     004c 35290000
+  71 0050 3408007C		li	$t0, ASCII_BAR
+  72 0054 A1280000		sb	$t0, 0($t1)
+  73 0058 21290001		addi	$t1, $t1, 1
+  74 005c               
+  75 005c 00805021		move	$t2, $a0
+  76 0060 340B0020		li	$t3, ASCII_SPACE
+  77 0064               
+  78 0064               buf_fill_center:
+  79 0064 11400004		beq	$t2, $zero, buf_done
+  80 0068               
+  81 0068 A12B0000		sb	$t3, 0($t1)
+  82 006c 21290001		addi	$t1, $t1, 1
+  83 0070 214AFFFF		addi	$t2, $t2, -1
+  84 0074 08000019		j 	buf_fill_center
+  85 0078               	
+  86 0078               buf_done:
+  87 0078 A1280000		sb	$t0, 0($t1)
+  88 007c 21290001		addi	$t1, $t1, 1
+  89 0080 340B000A		li	$t3, ASCII_NEWLINE
+  90 0084 A12B0000		sb	$t3, 0($t1)
+  91 0088 21290001		addi	$t1, $t1, 1
+  92 008c A1200000		sb	$zero, 0($t1)
+  93 0090               
+  94 0090 03E00008		jr	$ra
+  95 0094               	
+  96 0094               	
+  97 0094               
+  98 0094               #----------------------------------------
+  99 0094               #Name:		print_board
+ 100 0094               #Description: 	display the board 
+ 101 0094               #params: 	a0 the address of the board
+ 102 0094               #		a1 the size of the board
+ 103 0094               #returns:	none
+ 104 0094               #Destroys
+ 105 0094               	
+ 106 0094               print_board:
+ 107 0094 23BDFFE4		addi	$sp, $sp, -28
+ 108 0098 AFB00000		sw	$s0, 0($sp)
+ 109 009c AFB10004		sw	$s1, 4($sp)
+ 110 00a0 AFB20008		sw	$s2, 8($sp)
+ 111 00a4 AFB3000C		sw	$s3, 12($sp)
+ 112 00a8 AFB40010		sw	$s4, 16($sp)
+ 113 00ac AFB50014		sw	$s5, 20($sp)
+ 114 00b0 AFBF0018		sw	$ra, 24($sp)
+ 115 00b4               
+ 116 00b4 00808021		move	$s0, $a0
+ 117 00b8 00A08821		move	$s1, $a1
+ 118 00bc               	
+ 119 00bc               
+ 120 00bc 3C040000		la	$a0, edge_buffer
+     00c0 34840000
+ 121 00c4 34020004		li	$v0, PRINT_STRING
+ 122 00c8 0000000C		syscall
+ 123 00cc               
+ 124 00cc 02209821		move	$s3, $s1
+ 125 00d0               	
+ 126 00d0               display_row_loop:
+ 127 00d0 1260001B		beq	$s3, $zero, row_loop_done
+ 128 00d4 02009021		move	$s2, $s0
+ 129 00d8 0220A021		move	$s4, $s1
+ 130 00dc 3C150000		la	$s5, buffer
+     00e0 36B50000
+ 131 00e4 22B50001		addi	$s5, $s5, 1
+ 132 00e8               
+ 133 00e8               display_col_loop:
+ 134 00e8 1280000D		beq	$s4, $zero, col_loop_done
+ 135 00ec               
+ 136 00ec 82480000		lb	$t0, 0($s2)
+ 137 00f0 11000005		beq	$t0, $zero, write_space
+ 138 00f4 A2A80000		sb	$t0, 0($s5)
+ 139 00f8 22B50001		addi	$s5, $s5, 1
+ 140 00fc 22520001		addi	$s2, $s2, 1
+ 141 0100 2294FFFF		addi	$s4, $s4, -1
+ 142 0104 0800003A		j 	display_col_loop
+ 143 0108               write_space:
+ 144 0108 34190020		li 	$t9, ASCII_SPACE
+ 145 010c A2B90000		sb	$t9, 0($s5)
+ 146 0110 22B50001		addi	$s5, $s5, 1
+ 147 0114 22520001		addi	$s2, $s2, 1
+ 148 0118 2294FFFF		addi	$s4, $s4, -1
+ 149 011c 0800003A		j	display_col_loop
+ 150 0120               
+ 151 0120               col_loop_done:
+ 152 0120 3C040000		la	$a0, buffer
+     0124 34840000
+ 153 0128 34020004		li	$v0, PRINT_STRING
+ 154 012c 0000000C		syscall
+ 155 0130               
+ 156 0130 3408001E		li	$t0, ROW_OFFSET
+ 157 0134 02088020		add	$s0, $s0, $t0
+ 158 0138 2273FFFF		addi	$s3, $s3, -1
+ 159 013c 08000034		j 	display_row_loop
+ 160 0140               
+ 161 0140               row_loop_done:
+ 162 0140 3C040000		la	$a0, edge_buffer
+     0144 34840000
+ 163 0148 34020004		li	$v0, PRINT_STRING
+ 164 014c 0000000C		syscall
+ 165 0150               
+ 166 0150 8FB00000		lw	$s0, 0($sp)
+ 167 0154 8FB10004		lw	$s1, 4($sp)
+ 168 0158 8FB20008		lw	$s2, 8($sp)
+ 169 015c 8FB3000C		lw	$s3, 12($sp)
+ 170 0160 8FB40010		lw	$s4, 16($sp)
+ 171 0164 8FB50014		lw	$s5, 20($sp)
+ 172 0168 8FBF0018		lw	$ra, 24($sp)
+ 173 016c 23BD001C		addi	$sp, $sp, 28
+ 174 0170               
+ 175 0170 03E00008		jr	$ra
+ 176 0174               
+ 177 0174               #----------------------------------------
+ 178 0174               	
+ 179 0174               
+ 180 0174               	
+ 181 0174               	
+
+
+ASCII_BAR         = 0000007C   
+ASCII_MIN         = 0000002D   
+ASCII_NEWLINE     = 0000000A   
+ASCII_PLUS        = 0000002B   
+ASCII_SPACE       = 00000020   
+PRINT_STRING      = 00000004   
+ROW_OFFSET        = 0000001E   
+buf_done            00000078 R  text 
+buf_fill_center     00000064 R  text 
+buffer              00000000 R  data 
+col_loop_done       00000120 R  text 
+display_col_loop    000000E8 R  text 
+display_row_loop    000000D0 R  text 
+edge_buffer         00000022 R  data 
+edge_done           00000030 R  text 
+edge_fill_center    0000001C R  text 
+init_display        00000000 RG text 
+print_board         00000094 RG text 
+row_loop_done       00000140 R  text 
+write_space         00000108 R  text 

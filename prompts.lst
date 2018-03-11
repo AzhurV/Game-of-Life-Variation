@@ -12,7 +12,7 @@
   12 0000               
   13 0000               
   14 0000               #NUMERIC CONSTANTS
-  15 0000               MIN_BOARD_SIZE = 4
+  15 0000               MIN_BOARD_SIZE 	= 4
   16 0000               MAX_BOARD_SIZE = 30
   17 0000               MIN_GENERATIONS = 0
   18 0000               MAX_GENERATIONS = 20
@@ -235,7 +235,7 @@
  188 0150 0000000C		syscall
  189 0154               
  190 0154               locations_loop:
- 191 0154 1260001D		beq	$s3, $zero, locations_done
+ 191 0154 1260001E		beq	$s3, $zero, locations_done
  192 0158               
  193 0158 34020005		li	$v0, READ_INT
  194 015c 0000000C		syscall
@@ -248,50 +248,51 @@
  201 0170 0280402A		slt	$t0, $s4, $zero		#check for negative indices
  202 0174 02A0482A		slt	$t1, $s5, $zero
  203 0178 01094025		or	$t0, $t0, $t1
- 204 017c 1500000E		bne	$t0, $zero, coord_error
+ 204 017c 1500000F		bne	$t0, $zero, coord_error
  205 0180               
  206 0180 0291402A		slt	$t0, $s4, $s1		#check for indices that are too large
  207 0184 02B1482A		slt	$t1, $s5, $s1
  208 0188 01094024		and	$t0, $t0, $t1
- 209 018c 1100000A		beq	$t0, $zero, coord_error
+ 209 018c 1100000B		beq	$t0, $zero, coord_error
  210 0190               
- 211 0190 02340018		mul	$t0, $s1, $s4		#get proper offset into 1-D array
-     0194 00004012
- 212 0198 02084820		add	$t1, $s0, $t0
- 213 019c 01354820		add	$t1, $t1, $s5		#index into column
- 214 01a0               
- 215 01a0 81280000		lb	$t0, 0($t1)
- 216 01a4 15000004		bne	$t0, $zero, coord_error	#cell is occupied
- 217 01a8               
- 218 01a8 A1320000		sb	$s2, 0($t1)		#load character into array
- 219 01ac               
- 220 01ac 2273FFFF		addi	$s3, $s3, -1		#decrement count
- 221 01b0 00001021		move	$v0, $zero		#set v0 to zero to indicate success in
- 222 01b4               					#case this is the last loop
- 223 01b4 08000055		j 	locations_loop
- 224 01b8               
- 225 01b8               
- 226 01b8               coord_error:	
- 227 01b8 34020004		li	$v0, PRINT_STRING
- 228 01bc 3C040000		la	$a0, illegal_point
-     01c0 34840000
- 229 01c4 0000000C		syscall
- 230 01c8 34020001		li	$v0, 1
- 231 01cc               	
- 232 01cc               locations_done:
- 233 01cc 8FB00000		lw	$s0, 0($sp)
- 234 01d0 8FB10004		lw	$s1, 4($sp)
- 235 01d4 8FB20008		lw	$s2, 8($sp)
- 236 01d8 8FB3000C		lw	$s3, 12($sp)
- 237 01dc 8FB40010		lw	$s4, 16($sp)
- 238 01e0 8FB50014		lw	$s5, 20($sp)
- 239 01e4 8FB60018		lw	$s6, 24($sp)
- 240 01e8 8FBF001C		lw	$ra, 28($sp)
- 241 01ec               
- 242 01ec 23BD0020		addi	$sp, $sp, 32
- 243 01f0 03E00008		jr	$ra
- 244 01f4               
- 245 01f4               
+ 211 0190 3419001E		li	$t9, MAX_BOARD_SIZE
+ 212 0194 03340018		mul	$t0, $t9, $s4		#get proper offset into 1-D array
+     0198 00004012
+ 213 019c 02084820		add	$t1, $s0, $t0
+ 214 01a0 01354820		add	$t1, $t1, $s5		#index into column
+ 215 01a4               
+ 216 01a4 81280000		lb	$t0, 0($t1)
+ 217 01a8 15000004		bne	$t0, $zero, coord_error	#cell is occupied
+ 218 01ac               
+ 219 01ac A1320000		sb	$s2, 0($t1)		#load character into array
+ 220 01b0               
+ 221 01b0 2273FFFF		addi	$s3, $s3, -1		#decrement count
+ 222 01b4 00001021		move	$v0, $zero		#set v0 to zero to indicate success in
+ 223 01b8               					#case this is the last loop
+ 224 01b8 08000055		j 	locations_loop
+ 225 01bc               
+ 226 01bc               
+ 227 01bc               coord_error:	
+ 228 01bc 34020004		li	$v0, PRINT_STRING
+ 229 01c0 3C040000		la	$a0, illegal_point
+     01c4 34840000
+ 230 01c8 0000000C		syscall
+ 231 01cc 34020001		li	$v0, 1
+ 232 01d0               	
+ 233 01d0               locations_done:
+ 234 01d0 8FB00000		lw	$s0, 0($sp)
+ 235 01d4 8FB10004		lw	$s1, 4($sp)
+ 236 01d8 8FB20008		lw	$s2, 8($sp)
+ 237 01dc 8FB3000C		lw	$s3, 12($sp)
+ 238 01e0 8FB40010		lw	$s4, 16($sp)
+ 239 01e4 8FB50014		lw	$s5, 20($sp)
+ 240 01e8 8FB60018		lw	$s6, 24($sp)
+ 241 01ec 8FBF001C		lw	$ra, 28($sp)
+ 242 01f0               
+ 243 01f0 23BD0020		addi	$sp, $sp, 32
+ 244 01f4 03E00008		jr	$ra
+ 245 01f8               
+ 246 01f8               
 
 
 MAX_BOARD_SIZE           = 0000001E   
@@ -303,14 +304,14 @@ READ_INT                 = 00000005
 bad_alive_check            00000108 R  text 
 bad_generation_check       0000007C R  text 
 bad_size_check             00000020 R  text 
-coord_error                000001B8 R  text 
+coord_error                000001BC R  text 
 generation_prompt          00000013 R  data 
 illegal_generations        000000A6 R  data 
 illegal_live_cells         000000DB R  data 
 illegal_point              0000010F R  data 
 illegal_size               0000007C R  data 
 live_cells_prompt          00000038 R  data 
-locations_done             000001CC R  text 
+locations_done             000001D0 R  text 
 locations_loop             00000154 R  text 
 locations_prompt           00000062 R  data 
 prompt_board_done          00000050 R  text 

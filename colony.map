@@ -2,7 +2,7 @@ Load map
 ========
 
 Module:  colony.obj
- Text segment:  92 bytes, load point 0x00400000
+ Text segment:  116 bytes, load point 0x00400000
  Data segment:  1872 bytes, load point 0x10000000
  Symbols:
                      Name Section Mode    Value
@@ -14,44 +14,70 @@ Module:  colony.obj
              PRINT_STRING          A   0x00000004
                      main   Text   RG  0x00400000
                    banner   Data   R   0x10000708
-                main_done   Text   R   0x00400050
+                main_done   Text   R   0x00400068
                 PRINT_INT          A   0x00000001
 
 Module:  prompts.obj
- Text segment:  500 bytes, load point 0x0040005c
+ Text segment:  504 bytes, load point 0x00400074
  Data segment:  304 bytes, load point 0x10000750
  Symbols:
                      Name Section Mode    Value
-     bad_generation_check   Text   R   0x004000d8
+     bad_generation_check   Text   R   0x004000f0
               size_prompt   Data   R   0x10000750
           MIN_GENERATIONS          A   0x00000000
-        prompt_board_size   Text   RG  0x0040005c
+        prompt_board_size   Text   RG  0x00400074
         live_cells_prompt   Data   R   0x10000788
        illegal_live_cells   Data   R   0x1000082b
                  READ_INT          A   0x00000005
-          bad_alive_check   Text   R   0x00400164
+          bad_alive_check   Text   R   0x0040017c
       illegal_generations   Data   R   0x100007f6
-           locations_done   Text   R   0x00400228
+           locations_done   Text   R   0x00400244
         generation_prompt   Data   R   0x10000763
-              coord_error   Text   R   0x00400214
+              coord_error   Text   R   0x00400230
            MIN_BOARD_SIZE          A   0x00000004
              PRINT_STRING          A   0x00000004
             illegal_point   Data   R   0x1000085f
-        prompt_board_done   Text   R   0x004000ac
-         prompt_locations   Text   R   0x0040019c
+        prompt_board_done   Text   R   0x004000c4
+         prompt_locations   Text   R   0x004001b4
          locations_prompt   Data   R   0x100007b2
-             prompt_cells   Text   RG  0x00400114
-  prompt_generations_done   Text   R   0x00400108
-           bad_size_check   Text   R   0x0040007c
-           locations_loop   Text   R   0x004001b0
-       prompt_generations   Text   RG  0x004000b8
+             prompt_cells   Text   RG  0x0040012c
+  prompt_generations_done   Text   R   0x00400120
+           bad_size_check   Text   R   0x00400094
+           locations_loop   Text   R   0x004001c8
+       prompt_generations   Text   RG  0x004000d0
           MAX_GENERATIONS          A   0x00000014
            MAX_BOARD_SIZE          A   0x0000001e
              illegal_size   Data   R   0x100007cc
 
+Module:  display.obj
+ Text segment:  372 bytes, load point 0x0040026c
+ Data segment:  72 bytes, load point 0x10000880
+ Symbols:
+                     Name Section Mode    Value
+             init_display   Text   RG  0x0040026c
+         edge_fill_center   Text   R   0x00400288
+                ASCII_BAR          A   0x0000007c
+              ASCII_SPACE          A   0x00000020
+              write_space   Text   R   0x00400374
+          buf_fill_center   Text   R   0x004002d0
+               ROW_OFFSET          A   0x0000001e
+                ASCII_MIN          A   0x0000002d
+                   buffer   Data   R   0x10000880
+             PRINT_STRING          A   0x00000004
+               ASCII_PLUS          A   0x0000002b
+                edge_done   Text   R   0x0040029c
+                 buf_done   Text   R   0x004002e4
+            row_loop_done   Text   R   0x004003ac
+              edge_buffer   Data   R   0x100008a2
+              print_board   Text   RG  0x00400300
+         display_row_loop   Text   R   0x0040033c
+            ASCII_NEWLINE          A   0x0000000a
+         display_col_loop   Text   R   0x00400354
+            col_loop_done   Text   R   0x0040038c
+
 Module:  r2k_startup.obj
- Text segment:  36 bytes, load point 0x00400250
+ Text segment:  36 bytes, load point 0x004003e0
  Symbols:
                      Name Section Mode    Value
                 SYS_EXIT2          A   0x00000011
-           __r2k__entry__   Text   RG  0x00400254
+           __r2k__entry__   Text   RG  0x004003e4

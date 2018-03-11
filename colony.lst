@@ -78,44 +78,55 @@
   53 0000               	.globl prompt_board_size
   54 0000               	.globl prompt_generations
   55 0000               	.globl prompt_cells
-  56 0000               
-  57 0000               main:
-  58 0000 23BDFFFC		addi 	$sp, $sp, -4
-  59 0004 AFBF0000		sw	$ra, 0($sp)
-  60 0008 34020004		li 	$v0, PRINT_STRING
-  61 000c 3C040000		la	$a0, banner
+  56 0000               	.globl init_display
+  57 0000               	.globl print_board
+  58 0000               
+  59 0000               main:
+  60 0000 23BDFFFC		addi 	$sp, $sp, -4
+  61 0004 AFBF0000		sw	$ra, 0($sp)
+  62 0008 34020004		li 	$v0, PRINT_STRING
+  63 000c 3C040000		la	$a0, banner
      0010 34840000
-  62 0014 0000000C		syscall
-  63 0018               
-  64 0018 0C000000		jal	prompt_board_size
-  65 001c               
-  66 001c 00408021		move	$s0, $v0		#s0 = board size
-  67 0020               
-  68 0020 0C000000		jal 	prompt_generations
-  69 0024               
-  70 0024 00408821		move	$s1, $v0		#s1 = generations
-  71 0028               
-  72 0028 3C040000		la 	$a0, board_1
+  64 0014 0000000C		syscall
+  65 0018               
+  66 0018 0C000000		jal	prompt_board_size
+  67 001c               
+  68 001c 00408021		move	$s0, $v0		#s0 = board size
+  69 0020               
+  70 0020 0C000000		jal 	prompt_generations
+  71 0024               
+  72 0024 00408821		move	$s1, $v0		#s1 = generations
+  73 0028               
+  74 0028 3C040000		la 	$a0, board_1
      002c 34840000
-  73 0030 02002821		move 	$a1, $s0
-  74 0034 34060041		li	$a2, ASCII_A
-  75 0038 0C000000		jal 	prompt_cells
-  76 003c               
-  77 003c 3C040000		la	$a0, board_1
+  75 0030 02002821		move 	$a1, $s0
+  76 0034 34060041		li	$a2, ASCII_A
+  77 0038 0C000000		jal 	prompt_cells
+  78 003c               
+  79 003c 3C040000		la	$a0, board_1
      0040 34840000
-  78 0044 02002821		move	$a1, $s0
-  79 0048 34060042		li	$a2, ASCII_B
-  80 004c 0C000000		jal 	prompt_cells
-  81 0050               	
-  82 0050               
+  80 0044 02002821		move	$a1, $s0
+  81 0048 34060042		li	$a2, ASCII_B
+  82 004c 0C000000		jal 	prompt_cells
   83 0050               
-  84 0050               main_done:
-  85 0050 8FBF0000		lw	$ra, 0($sp)
-  86 0054 23BD0004		addi	$sp, 4
-  87 0058 03E00008		jr	$ra
-  88 005c               
-  89 005c               	
-  90 005c               	
+  84 0050 02002021		move	$a0, $s0
+  85 0054 0C000000		jal 	init_display
+  86 0058               
+  87 0058 3C040000		la	$a0, board_1
+     005c 34840000
+  88 0060 02002821		move	$a1, $s0
+  89 0064 0C000000		jal 	print_board
+  90 0068               	
+  91 0068               	
+  92 0068               
+  93 0068               
+  94 0068               main_done:
+  95 0068 8FBF0000		lw	$ra, 0($sp)
+  96 006c 23BD0004		addi	$sp, 4
+  97 0070 03E00008		jr	$ra
+  98 0074               
+  99 0074               	
+ 100 0074               	
 
 
 ASCII_A             = 00000041   
@@ -126,8 +137,10 @@ READ_INT            = 00000005
 banner                00000708 R  data 
 board_1               00000000 R  data 
 board_2               00000384 R  data 
+init_display          ******** XG
 main                  00000000 RG text 
-main_done             00000050 R  text 
+main_done             00000068 R  text 
+print_board           ******** XG
 prompt_board_size     ******** XG
 prompt_cells          ******** XG
 prompt_generations    ******** XG

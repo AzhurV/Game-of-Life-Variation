@@ -12,7 +12,7 @@
 
 
 #NUMERIC CONSTANTS
-MIN_BOARD_SIZE = 4
+MIN_BOARD_SIZE 	= 4
 MAX_BOARD_SIZE = 30
 MIN_GENERATIONS = 0
 MAX_GENERATIONS = 20
@@ -208,7 +208,8 @@ locations_loop:
 	and	$t0, $t0, $t1
 	beq	$t0, $zero, coord_error
 
-	mul	$t0, $s1, $s4		#get proper offset into 1-D array
+	li	$t9, MAX_BOARD_SIZE
+	mul	$t0, $t9, $s4		#get proper offset into 1-D array
 	add	$t1, $s0, $t0
 	add	$t1, $t1, $s5		#index into column
 
