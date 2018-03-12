@@ -1,0 +1,364 @@
+   1 0000               #
+   2 0000               # FILE:         next_gen.asm
+   3 0000               # AUTHOR:       avv8047 : Azhur Viano
+   4 0000               #
+   5 0000               # DESCRIPTION:
+   6 0000               #	Module to generate the next generation for a given
+   7 0000               #	board configuration
+   8 0000               #
+   9 0000               # ARGUMENTS:
+  10 0000               #	None
+  11 0000               #
+  12 0000               
+  13 0000               
+  14 0000               
+  15 0000               ROW_OFFSET 	= 30
+  16 0000               ASCII_A 	= 65	
+  17 0000               ASCII_B 	= 66
+  18 0000               
+  19 0000               	.text
+  20 0000               	.align 2
+  21 0000               	.globl generate_next
+  22 0000               
+  23 0000               #----------------------------------------
+  24 0000               #Name:		update_counts
+  25 0000               #Description: 	update the count of neighbors 
+  26 0000               #params:	a0 the new neighbor
+  27 0000               #		a1 the count of A neighbors
+  28 0000               #		a2 the count of B neighbors
+  29 0000               #	
+  30 0000               #returns:	v0 the new count of A neighbors
+  31 0000               #		v1 the new count of B neighbors	
+  32 0000               #Destroys
+  33 0000               
+  34 0000               update_counts:
+  35 0000 34080041		li 	$t0, ASCII_A
+  36 0004 10880003		beq	$a0, $t0, update_A
+  37 0008 34080042		li	$t0, ASCII_B
+  38 000c 10880003		beq	$a0, $t0, update_B
+  39 0010 08000008		j 	update_done
+  40 0014               
+  41 0014               update_A:
+  42 0014 20A50001		addi	$a1, $a1, 1
+  43 0018 08000008		j 	update_done
+  44 001c               update_B:
+  45 001c 20C60001		addi	$a2, $a2, 1
+  46 0020               update_done:
+  47 0020 00A01021		move	$v0, $a1
+  48 0024 00C01821		move	$v1, $a2
+  49 0028 03E00008		jr	$ra
+  50 002c               	
+  51 002c               #----------------------------------------
+  52 002c               #Name:		get_neighbor
+  53 002c               #Description: 	get the neighbor of a cell
+  54 002c               #params:	a0 address of the board
+  55 002c               #		a1 row of neighbor to get
+  56 002c               #		a2 col of neighbor to get
+  57 002c               #		a3 size of the board
+  58 002c               #	
+  59 002c               #returns:	v0 the value of the neighbor
+  60 002c               #Destroys
+  61 002c               	
+  62 002c               get_neighbor:
+  63 002c 00A0402A		slt	$t0, $a1, $zero
+  64 0030 15000002		bne	$t0, $zero, adjust_neg_row
+  65 0034 10E50003		beq	$a3, $a1, adjust_pos_row
+  66 0038 08000012		j 	check_col
+  67 003c               
+  68 003c               adjust_neg_row:
+  69 003c 20E5FFFF		addi	$a1, $a3, -1
+  70 0040 08000012		j 	check_col
+  71 0044               	
+  72 0044               adjust_pos_row:
+  73 0044 00002821		move	$a1, $zero
+  74 0048               	
+  75 0048               check_col:
+  76 0048 00C0402A		slt	$t0, $a2, $zero
+  77 004c 15000002		bne	$t0, $zero, adjust_neg_col
+  78 0050 10E60003		beq	$a3, $a2, adjust_pos_col
+  79 0054 08000019		j 	load_neighbor
+  80 0058               
+  81 0058               adjust_neg_col:
+  82 0058 20E6FFFF		addi	$a2, $a3, -1
+  83 005c 08000019		j 	load_neighbor
+  84 0060               
+  85 0060               adjust_pos_col:
+  86 0060 00003021		move	$a2, $zero
+  87 0064               
+  88 0064               load_neighbor:
+  89 0064 3408001E		li	$t0, ROW_OFFSET
+  90 0068 00A80018		mul	$t1, $a1, $t0
+     006c 00004812
+  91 0070 00892020		add	$a0, $a0, $t1
+  92 0074 00862020		add	$a0, $a0, $a2
+  93 0078               
+  94 0078 80820000		lb	$v0, 0($a0)
+  95 007c               
+  96 007c 03E00008		jr	$ra
+  97 0080               	
+  98 0080               #----------------------------------------
+  99 0080               #Name:		neighbor_count
+ 100 0080               #Description: 	get the count of A and B neighbors for a cell
+ 101 0080               #params: 	a0 the address of the board
+ 102 0080               #		a1 the row of the cell
+ 103 0080               #		a2 the col of the cell
+ 104 0080               #		a3 the size of the board
+ 105 0080               #returns:	v0 the count of A cells
+ 106 0080               #		v1 the count of B cells	
+ 107 0080               #Destroys
+ 108 0080               	
+ 109 0080               neighbor_count:
+ 110 0080 23BDFFDC		addi	$sp, $sp, -36
+ 111 0084 AFB00000		sw	$s0, 0($sp)
+ 112 0088 AFB10004		sw	$s1, 4($sp)
+ 113 008c AFB20008		sw	$s2, 8($sp)
+ 114 0090 AFB3000C		sw	$s3, 12($sp)
+ 115 0094 AFB40010		sw	$s4, 16($sp)
+ 116 0098 AFB50014		sw	$s5, 20($sp)
+ 117 009c AFB60018		sw	$s6, 24($sp)
+ 118 00a0 AFB7001C		sw	$s7, 28($sp)
+ 119 00a4 AFBF0020		sw	$ra, 32($sp)
+ 120 00a8               
+ 121 00a8 00008021		move	$s0, $zero	#count for A neighbors
+ 122 00ac 00008821		move	$s1, $zero	#count for B neighbors
+ 123 00b0               
+ 124 00b0 00809021		move	$s2, $a0
+ 125 00b4 00A09821		move	$s3, $a1	#s3 = row
+ 126 00b8 00C0A021		move	$s4, $a2	#s4 = col
+ 127 00bc 00E0A821		move	$s5, $a3
+ 128 00c0 22760001		addi	$s6, $s3, 1
+ 129 00c4 22970001		addi	$s7, $s4, 1
+ 130 00c8               
+ 131 00c8 2273FFFF		addi	$s3, $s3, -1
+ 132 00cc               	
+ 133 00cc               neighbor_row_loop:
+ 134 00cc 22F4FFFE		addi	$s4, $s7, -2
+ 135 00d0 02D3402A		slt	$t0, $s6, $s3
+ 136 00d4 15000011		bne	$t0, $zero, neighbor_row_done
+ 137 00d8               
+ 138 00d8               neighbor_col_loop:
+ 139 00d8 02F4402A		slt	$t0, $s7, $s4
+ 140 00dc 1500000D		bne	$t0, $zero, neighbor_col_done
+ 141 00e0               
+ 142 00e0 02402021		move	$a0, $s2
+ 143 00e4 02602821		move	$a1, $s3
+ 144 00e8 02803021		move	$a2, $s4
+ 145 00ec 02A03821		move	$a3, $s5
+ 146 00f0 0C00000B		jal 	get_neighbor
+ 147 00f4               
+ 148 00f4 00402021		move	$a0, $v0
+ 149 00f8 02002821		move	$a1, $s0
+ 150 00fc 02203021		move	$a2, $s1
+ 151 0100 0C000000		jal	update_counts
+ 152 0104               
+ 153 0104 00408021		move	$s0, $v0
+ 154 0108 00608821		move	$s1, $v1
+ 155 010c               
+ 156 010c 22940001		addi	$s4, $s4, 1
+ 157 0110 08000036		j	neighbor_col_loop
+ 158 0114               neighbor_col_done:
+ 159 0114 22730001		addi	$s3, $s3, 1
+ 160 0118 08000033		j	neighbor_row_loop
+ 161 011c               
+ 162 011c               neighbor_row_done:
+ 163 011c 02402021		move	$a0, $s2
+ 164 0120 22C5FFFF		addi	$a1, $s6, -1
+ 165 0124 22E6FFFF		addi	$a2, $s7, -1
+ 166 0128 0C00000B		jal	get_neighbor
+ 167 012c               
+ 168 012c 34080041		li	$t0, ASCII_A
+ 169 0130 10480003		beq	$v0, $t0, adjust_A
+ 170 0134 34080042		li	$t0, ASCII_B
+ 171 0138 10480003		beq	$v0, $t0, adjust_B
+ 172 013c 08000054		j 	neighbor_count_done
+ 173 0140               
+ 174 0140               adjust_A:
+ 175 0140 2210FFFF		addi	$s0, $s0, -1
+ 176 0144 08000054		j 	neighbor_count_done
+ 177 0148               	
+ 178 0148               adjust_B:
+ 179 0148 2231FFFF		addi	$s1, $s1, -1
+ 180 014c 08000054		j	neighbor_count_done
+ 181 0150               
+ 182 0150               	
+ 183 0150               neighbor_count_done:
+ 184 0150 02001021		move	$v0, $s0
+ 185 0154 02201821		move	$v1, $s1
+ 186 0158               	
+ 187 0158 8FB00000		lw	$s0, 0($sp)
+ 188 015c 8FB10004		lw	$s1, 4($sp)
+ 189 0160 8FB20008		lw	$s2, 8($sp)
+ 190 0164 8FB3000C		lw	$s3, 12($sp)
+ 191 0168 8FB40010		lw	$s4, 16($sp)
+ 192 016c 8FB50014		lw	$s5, 20($sp)
+ 193 0170 8FB60018		lw	$s6, 24($sp)
+ 194 0174 8FB7001C		lw	$s7, 28($sp)
+ 195 0178 8FBF0020		lw	$ra, 32($sp)
+ 196 017c               
+ 197 017c 23BD0024		addi	$sp, $sp, 36
+ 198 0180               
+ 199 0180 03E00008		jr	$ra
+ 200 0184               
+ 201 0184               
+ 202 0184               #----------------------------------------
+ 203 0184               #Name:		generate_next
+ 204 0184               #Description: 	generate the next generation
+ 205 0184               #params: 	a0 the address of the board for the previous generation
+ 206 0184               #		a1 the address of the board to store the new generation in
+ 207 0184               #		a2 the size of the board
+ 208 0184               #returns:	none
+ 209 0184               #Destroys
+ 210 0184               	
+ 211 0184               generate_next:
+ 212 0184 23BDFFDC		addi	$sp, $sp, -36
+ 213 0188 AFB00000		sw	$s0, 0($sp)
+ 214 018c AFB10004		sw	$s1, 4($sp)
+ 215 0190 AFB20008		sw	$s2, 8($sp)
+ 216 0194 AFB3000C		sw	$s3, 12($sp)
+ 217 0198 AFB40010		sw	$s4, 16($sp)
+ 218 019c AFB50014		sw	$s5, 20($sp)
+ 219 01a0 AFB60018		sw	$s6, 24($sp)
+ 220 01a4 AFB7001C		sw	$s7, 28($sp)
+ 221 01a8 AFBF0020		sw	$ra, 32($sp)
+ 222 01ac               
+ 223 01ac 00808021		move	$s0, $a0
+ 224 01b0 00A08821		move	$s1, $a1
+ 225 01b4 00C09021		move	$s2, $a2
+ 226 01b8               
+ 227 01b8 00009821		move	$s3, $zero	#row index
+ 228 01bc               
+ 229 01bc               gen_row_loop:
+ 230 01bc 0253402A		slt	$t0, $s2, $s3
+ 231 01c0 12530031		beq	$s2, $s3, gen_row_done
+ 232 01c4 0200A821		move	$s5, $s0
+ 233 01c8 0220B021		move	$s6, $s1
+ 234 01cc               
+ 235 01cc 0000A021		move	$s4, $zero
+ 236 01d0 3408001E		li	$t0, ROW_OFFSET
+ 237 01d4 01130018		mul	$t1, $t0, $s3
+     01d8 00004812
+ 238 01dc 0209A820		add	$s5, $s0, $t1		#offset into proper row
+ 239 01e0 0229B020		add	$s6, $s1, $t1
+ 240 01e4               	
+ 241 01e4               
+ 242 01e4               gen_col_loop:
+ 243 01e4 12540026		beq	$s2, $s4, gen_col_done
+ 244 01e8               
+ 245 01e8 02002021		move	$a0, $s0
+ 246 01ec 02602821		move	$a1, $s3
+ 247 01f0 02803021		move	$a2, $s4
+ 248 01f4 02403821		move	$a3, $s2
+ 249 01f8 0C000020		jal 	neighbor_count
+ 250 01fc               
+ 251 01fc 82A90000		lb	$t1, 0($s5)
+ 252 0200 1120000F		beq	$t1, $zero, check_cur_dead
+ 253 0204               
+ 254 0204 34080042		li	$t0, ASCII_B
+ 255 0208 11280002		beq	$t1, $t0, calc_n_B
+ 256 020c               
+ 257 020c 00435022		sub	$t2, $v0, $v1
+ 258 0210 08000086		j	check_cur_alive
+ 259 0214               
+ 260 0214               calc_n_B:
+ 261 0214 00625022		sub	$t2, $v1, $v0
+ 262 0218               
+ 263 0218               check_cur_alive:
+ 264 0218 340B0002		li	$t3, 2
+ 265 021c 340C0003		li	$t4, 3
+ 266 0220 014B682A		slt	$t5, $t2, $t3
+ 267 0224 018A702A		slt	$t6, $t4, $t2
+ 268 0228 01AE6825		or	$t5, $t5, $t6
+ 269 022c               
+ 270 022c 15A00002		bne	$t5, $zero, store_dead
+ 271 0230               
+ 272 0230 A2C90000		sb	$t1, 0($s6)
+ 273 0234 0800009C		j	check_cell_done
+ 274 0238               
+ 275 0238               store_dead:
+ 276 0238 A2C00000		sb	$zero, 0($s6)
+ 277 023c 0800009C		j 	check_cell_done
+ 278 0240               
+ 279 0240               check_cur_dead:
+ 280 0240 34190003		li	$t9, 3
+ 281 0244 00625022		sub	$t2, $v1, $v0
+ 282 0248 11590004		beq	$t2, $t9, dead_store_B
+ 283 024c               
+ 284 024c 00435022		sub	$t2, $v0, $v1
+ 285 0250 11590005		beq	$t2, $t9, dead_store_A
+ 286 0254               
+ 287 0254 A2C00000		sb	$zero, 0($s6)
+ 288 0258 0800009C		j	check_cell_done
+ 289 025c               
+ 290 025c               dead_store_B:
+ 291 025c 34090042		li	$t1, ASCII_B
+ 292 0260 A2C90000		sb	$t1, 0($s6)
+ 293 0264 0800009C		j	check_cell_done
+ 294 0268               
+ 295 0268               dead_store_A:
+ 296 0268 34090041		li	$t1, ASCII_A
+ 297 026c A2C90000		sb	$t1, 0($s6)
+ 298 0270               
+ 299 0270               check_cell_done:
+ 300 0270 22940001		addi	$s4, $s4, 1	#increment col
+ 301 0274 22B50001		addi	$s5, $s5, 1	#increment current element in boards
+ 302 0278 22D60001		addi	$s6, $s6, 1
+ 303 027c 08000079		j	gen_col_loop
+ 304 0280               
+ 305 0280               	
+ 306 0280               gen_col_done:
+ 307 0280 22730001		addi	$s3, $s3, 1
+ 308 0284 0800006F		j	gen_row_loop
+ 309 0288               
+ 310 0288               gen_row_done:
+ 311 0288 8FB00000		lw	$s0, 0($sp)
+ 312 028c 8FB10004		lw	$s1, 4($sp)
+ 313 0290 8FB20008		lw	$s2, 8($sp)
+ 314 0294 8FB3000C		lw	$s3, 12($sp)
+ 315 0298 8FB40010		lw	$s4, 16($sp)
+ 316 029c 8FB50014		lw	$s5, 20($sp)
+ 317 02a0 8FB60018		lw	$s6, 24($sp)
+ 318 02a4 8FB7001C		lw	$s7, 28($sp)
+ 319 02a8 8FBF0020		lw	$ra, 32($sp)
+ 320 02ac               
+ 321 02ac 23BD0024		addi	$sp, $sp, 36
+ 322 02b0               
+ 323 02b0 03E00008		jr	$ra
+ 324 02b4               
+ 325 02b4               #----------------------------------------
+ 326 02b4               	
+
+
+ASCII_A              = 00000041   
+ASCII_B              = 00000042   
+ROW_OFFSET           = 0000001E   
+adjust_A               00000140 R  text 
+adjust_B               00000148 R  text 
+adjust_neg_col         00000058 R  text 
+adjust_neg_row         0000003C R  text 
+adjust_pos_col         00000060 R  text 
+adjust_pos_row         00000044 R  text 
+calc_n_B               00000214 R  text 
+check_cell_done        00000270 R  text 
+check_col              00000048 R  text 
+check_cur_alive        00000218 R  text 
+check_cur_dead         00000240 R  text 
+dead_store_A           00000268 R  text 
+dead_store_B           0000025C R  text 
+gen_col_done           00000280 R  text 
+gen_col_loop           000001E4 R  text 
+gen_row_done           00000288 R  text 
+gen_row_loop           000001BC R  text 
+generate_next          00000184 RG text 
+get_neighbor           0000002C R  text 
+load_neighbor          00000064 R  text 
+neighbor_col_done      00000114 R  text 
+neighbor_col_loop      000000D8 R  text 
+neighbor_count         00000080 R  text 
+neighbor_count_done    00000150 R  text 
+neighbor_row_done      0000011C R  text 
+neighbor_row_loop      000000CC R  text 
+store_dead             00000238 R  text 
+update_A               00000014 R  text 
+update_B               0000001C R  text 
+update_counts          00000000 R  text 
+update_done            00000020 R  text 

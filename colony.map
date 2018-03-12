@@ -2,82 +2,125 @@ Load map
 ========
 
 Module:  colony.obj
- Text segment:  116 bytes, load point 0x00400000
- Data segment:  1872 bytes, load point 0x10000000
+ Text segment:  236 bytes, load point 0x00400000
+ Data segment:  1904 bytes, load point 0x10000000
  Symbols:
                      Name Section Mode    Value
                   ASCII_A          A   0x00000041
                   ASCII_B          A   0x00000042
+                 gen_line   Data   R   0x1000076c
                  READ_INT          A   0x00000005
+                  gen_end   Data   R   0x10000762
                   board_1   Data   R   0x10000000
+            main_gen_loop   Text   R   0x0040006c
                   board_2   Data   R   0x10000384
              PRINT_STRING          A   0x00000004
                      main   Text   RG  0x00400000
                    banner   Data   R   0x10000708
-                main_done   Text   R   0x00400068
+                main_done   Text   R   0x004000e0
+                gen_start   Data   R   0x1000074e
                 PRINT_INT          A   0x00000001
 
 Module:  prompts.obj
- Text segment:  504 bytes, load point 0x00400074
- Data segment:  304 bytes, load point 0x10000750
+ Text segment:  504 bytes, load point 0x004000ec
+ Data segment:  304 bytes, load point 0x10000770
  Symbols:
                      Name Section Mode    Value
-     bad_generation_check   Text   R   0x004000f0
-              size_prompt   Data   R   0x10000750
+     bad_generation_check   Text   R   0x00400168
+              size_prompt   Data   R   0x10000770
           MIN_GENERATIONS          A   0x00000000
-        prompt_board_size   Text   RG  0x00400074
-        live_cells_prompt   Data   R   0x10000788
-       illegal_live_cells   Data   R   0x1000082b
+        prompt_board_size   Text   RG  0x004000ec
+        live_cells_prompt   Data   R   0x100007a8
+       illegal_live_cells   Data   R   0x1000084b
                  READ_INT          A   0x00000005
-          bad_alive_check   Text   R   0x0040017c
-      illegal_generations   Data   R   0x100007f6
-           locations_done   Text   R   0x00400244
-        generation_prompt   Data   R   0x10000763
-              coord_error   Text   R   0x00400230
+          bad_alive_check   Text   R   0x004001f4
+      illegal_generations   Data   R   0x10000816
+           locations_done   Text   R   0x004002bc
+        generation_prompt   Data   R   0x10000783
+              coord_error   Text   R   0x004002a8
            MIN_BOARD_SIZE          A   0x00000004
              PRINT_STRING          A   0x00000004
-            illegal_point   Data   R   0x1000085f
-        prompt_board_done   Text   R   0x004000c4
-         prompt_locations   Text   R   0x004001b4
-         locations_prompt   Data   R   0x100007b2
-             prompt_cells   Text   RG  0x0040012c
-  prompt_generations_done   Text   R   0x00400120
-           bad_size_check   Text   R   0x00400094
-           locations_loop   Text   R   0x004001c8
-       prompt_generations   Text   RG  0x004000d0
+            illegal_point   Data   R   0x1000087f
+        prompt_board_done   Text   R   0x0040013c
+         prompt_locations   Text   R   0x0040022c
+         locations_prompt   Data   R   0x100007d2
+             prompt_cells   Text   RG  0x004001a4
+  prompt_generations_done   Text   R   0x00400198
+           bad_size_check   Text   R   0x0040010c
+           locations_loop   Text   R   0x00400240
+       prompt_generations   Text   RG  0x00400148
           MAX_GENERATIONS          A   0x00000014
            MAX_BOARD_SIZE          A   0x0000001e
-             illegal_size   Data   R   0x100007cc
+             illegal_size   Data   R   0x100007ec
 
 Module:  display.obj
- Text segment:  372 bytes, load point 0x0040026c
- Data segment:  72 bytes, load point 0x10000880
+ Text segment:  372 bytes, load point 0x004002e4
+ Data segment:  72 bytes, load point 0x100008a0
  Symbols:
                      Name Section Mode    Value
-             init_display   Text   RG  0x0040026c
-         edge_fill_center   Text   R   0x00400288
+             init_display   Text   RG  0x004002e4
+         edge_fill_center   Text   R   0x00400300
                 ASCII_BAR          A   0x0000007c
               ASCII_SPACE          A   0x00000020
-              write_space   Text   R   0x00400374
-          buf_fill_center   Text   R   0x004002d0
+              write_space   Text   R   0x004003ec
+          buf_fill_center   Text   R   0x00400348
                ROW_OFFSET          A   0x0000001e
                 ASCII_MIN          A   0x0000002d
-                   buffer   Data   R   0x10000880
+                   buffer   Data   R   0x100008a0
              PRINT_STRING          A   0x00000004
                ASCII_PLUS          A   0x0000002b
-                edge_done   Text   R   0x0040029c
-                 buf_done   Text   R   0x004002e4
-            row_loop_done   Text   R   0x004003ac
-              edge_buffer   Data   R   0x100008a2
-              print_board   Text   RG  0x00400300
-         display_row_loop   Text   R   0x0040033c
+                edge_done   Text   R   0x00400314
+                 buf_done   Text   R   0x0040035c
+            row_loop_done   Text   R   0x00400424
+              edge_buffer   Data   R   0x100008c2
+              print_board   Text   RG  0x00400378
+         display_row_loop   Text   R   0x004003b4
             ASCII_NEWLINE          A   0x0000000a
-         display_col_loop   Text   R   0x00400354
-            col_loop_done   Text   R   0x0040038c
+         display_col_loop   Text   R   0x004003cc
+            col_loop_done   Text   R   0x00400404
+
+Module:  next_gen.obj
+ Text segment:  692 bytes, load point 0x00400458
+ Symbols:
+                     Name Section Mode    Value
+             dead_store_B   Text   R   0x004006b4
+                 update_A   Text   R   0x0040046c
+                 update_B   Text   R   0x00400474
+           adjust_pos_row   Text   R   0x0040049c
+            generate_next   Text   RG  0x004005dc
+                  ASCII_A          A   0x00000041
+                  ASCII_B          A   0x00000042
+                check_col   Text   R   0x004004a0
+            update_counts   Text   R   0x00400458
+        neighbor_row_loop   Text   R   0x00400524
+             gen_row_done   Text   R   0x004006e0
+        neighbor_col_loop   Text   R   0x00400530
+              update_done   Text   R   0x00400478
+           adjust_neg_row   Text   R   0x00400494
+           adjust_pos_col   Text   R   0x004004b8
+             gen_col_done   Text   R   0x004006d8
+      neighbor_count_done   Text   R   0x004005a8
+               ROW_OFFSET          A   0x0000001e
+           neighbor_count   Text   R   0x004004d8
+            load_neighbor   Text   R   0x004004bc
+           check_cur_dead   Text   R   0x00400698
+                 adjust_A   Text   R   0x00400598
+                 adjust_B   Text   R   0x004005a0
+        neighbor_row_done   Text   R   0x00400574
+               store_dead   Text   R   0x00400690
+           adjust_neg_col   Text   R   0x004004b0
+                 calc_n_B   Text   R   0x0040066c
+        neighbor_col_done   Text   R   0x0040056c
+             gen_row_loop   Text   R   0x00400614
+          check_cell_done   Text   R   0x004006c8
+          check_cur_alive   Text   R   0x00400670
+             get_neighbor   Text   R   0x00400484
+             gen_col_loop   Text   R   0x0040063c
+             dead_store_A   Text   R   0x004006c0
 
 Module:  r2k_startup.obj
- Text segment:  36 bytes, load point 0x004003e0
+ Text segment:  36 bytes, load point 0x0040070c
  Symbols:
                      Name Section Mode    Value
                 SYS_EXIT2          A   0x00000011
-           __r2k__entry__   Text   RG  0x004003e4
+           __r2k__entry__   Text   RG  0x00400710

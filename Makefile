@@ -16,7 +16,7 @@ RLINK = /home/fac/wrc/bin/rlink
 #
 # Object files
 #
-OBJFILES = colony.obj prompts.obj display.obj
+OBJFILES = colony.obj prompts.obj display.obj next_gen.obj
 
 #
 # Transformation rule: .asm into .obj
