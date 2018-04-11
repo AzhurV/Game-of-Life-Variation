@@ -28,7 +28,7 @@
   28 0000               READ_INT 	= 5
   29 0000               ASCII_A 	= 65	
   30 0000               ASCII_B 	= 66
-  31 0000               
+  31 0000               	
   32 0000               	
   33 0000               #DATA AREAS
   34 0000               	.data
@@ -62,26 +62,26 @@
           6E792020
           20202A2A
           2A2A0A  
-  45 0736 2A2A2A2A		.asciiz "**********************\n"
+  45 0736 2A2A2A2A		.asciiz "**********************\n\n"
           2A2A2A2A
           2A2A2A2A
           2A2A2A2A
           2A2A2A2A
-          2A2A0A00
-  46 074e               gen_start:
-  47 074e 3D3D3D3D		.asciiz "====    GENERATION "
+          2A2A0A0A
+  46 074f               gen_start:
+  47 074f 3D3D3D3D		.asciiz "====    GENERATION "
           20202020
           47454E45
           52415449
           4F4E2000
-  48 0762               gen_end:
-  49 0762 20202020		.asciiz "    ====\n"
+  48 0763               gen_end:
+  49 0763 20202020		.asciiz "    ====\n"
           3D3D3D3D
           0A00    
-  50 076c               gen_line:
-  51 076c 0A00    		.asciiz "\n"
-  52 076e               
-  53 076e               
+  50 076d               gen_line:
+  51 076d 0A00    		.asciiz "\n"
+  52 076f               
+  53 076f               
   54 0000               	.text
   55 0000               	.align 2
   56 0000               	.globl main
@@ -114,70 +114,78 @@
   81 0030 02002821		move 	$a1, $s0
   82 0034 34060041		li	$a2, ASCII_A
   83 0038 0C000000		jal 	prompt_cells
-  84 003c               
-  85 003c 3C040000		la	$a0, board_1
-     0040 34840000
-  86 0044 02002821		move	$a1, $s0
-  87 0048 34060042		li	$a2, ASCII_B
-  88 004c 0C000000		jal 	prompt_cells
+  84 003c 1440002E		bne	$v0, $zero, main_done
+  85 0040               
+  86 0040 34020004		li 	$v0, PRINT_STRING
+  87 0044 3C040000		la	$a0, gen_line
+     0048 34840000
+  88 004c 0000000C		syscall
   89 0050               
-  90 0050 02002021		move	$a0, $s0
-  91 0054 0C000000		jal 	init_display
-  92 0058               
-  93 0058 00009021		move	$s2, $zero
-  94 005c 3C130000		la	$s3, board_1
-     0060 36730000
-  95 0064 3C140000		la	$s4, board_2
-     0068 36940000
-  96 006c               
-  97 006c               main_gen_loop:
-  98 006c 0232402A		slt	$t0, $s1, $s2
-  99 0070 1500001B		bne	$t0, $zero, main_done
- 100 0074               
- 101 0074               	
- 102 0074 34020004		li	$v0, PRINT_STRING
- 103 0078 3C040000		la	$a0, gen_start
-     007c 34840000
- 104 0080 0000000C		syscall
- 105 0084               
- 106 0084 34020001		li	$v0, PRINT_INT
- 107 0088 02402021		move	$a0, $s2
- 108 008c 0000000C		syscall
- 109 0090               
- 110 0090 34020004		li	$v0, PRINT_STRING
- 111 0094 3C040000		la	$a0, gen_end
-     0098 34840000
- 112 009c 0000000C		syscall
- 113 00a0               
- 114 00a0 02602021		move	$a0, $s3
- 115 00a4 02002821		move	$a1, $s0
- 116 00a8 0C000000		jal	print_board
- 117 00ac               
- 118 00ac 34020004		li	$v0, PRINT_STRING
- 119 00b0 3C040000		la	$a0, gen_line
-     00b4 34840000
- 120 00b8 0000000C		syscall
- 121 00bc               
- 122 00bc 02602021		move	$a0, $s3
- 123 00c0 02802821		move	$a1, $s4
- 124 00c4 02003021		move	$a2, $s0
- 125 00c8               
- 126 00c8 0C000000		jal	generate_next
- 127 00cc               
- 128 00cc 02604021		move	$t0, $s3	#swap boards
- 129 00d0 02809821		move	$s3, $s4
- 130 00d4 0100A021		move	$s4, $t0
- 131 00d8 22520001		addi	$s2, $s2, 1
- 132 00dc 0800001B		j	main_gen_loop
- 133 00e0               
- 134 00e0               
- 135 00e0               main_done:
- 136 00e0 8FBF0000		lw	$ra, 0($sp)
- 137 00e4 23BD0004		addi	$sp, 4
- 138 00e8 03E00008		jr	$ra
- 139 00ec               
- 140 00ec               	
- 141 00ec               	
+  90 0050 3C040000		la	$a0, board_1
+     0054 34840000
+  91 0058 02002821		move	$a1, $s0
+  92 005c 34060042		li	$a2, ASCII_B
+  93 0060 0C000000		jal 	prompt_cells
+  94 0064 14400024		bne	$v0, $zero, main_done
+  95 0068               
+  96 0068 02002021		move	$a0, $s0
+  97 006c 0C000000		jal 	init_display
+  98 0070               
+  99 0070 00009021		move	$s2, $zero
+ 100 0074 3C130000		la	$s3, board_1
+     0078 36730000
+ 101 007c 3C140000		la	$s4, board_2
+     0080 36940000
+ 102 0084               
+ 103 0084               main_gen_loop:
+ 104 0084 0232402A		slt	$t0, $s1, $s2
+ 105 0088 1500001B		bne	$t0, $zero, main_done
+ 106 008c               
+ 107 008c               	
+ 108 008c 34020004		li	$v0, PRINT_STRING
+ 109 0090 3C040000		la	$a0, gen_start
+     0094 34840000
+ 110 0098 0000000C		syscall
+ 111 009c               
+ 112 009c 34020001		li	$v0, PRINT_INT
+ 113 00a0 02402021		move	$a0, $s2
+ 114 00a4 0000000C		syscall
+ 115 00a8               
+ 116 00a8 34020004		li	$v0, PRINT_STRING
+ 117 00ac 3C040000		la	$a0, gen_end
+     00b0 34840000
+ 118 00b4 0000000C		syscall
+ 119 00b8               
+ 120 00b8 02602021		move	$a0, $s3
+ 121 00bc 02002821		move	$a1, $s0
+ 122 00c0 0C000000		jal	print_board
+ 123 00c4               
+ 124 00c4 34020004		li	$v0, PRINT_STRING
+ 125 00c8 3C040000		la	$a0, gen_line
+     00cc 34840000
+ 126 00d0 0000000C		syscall
+ 127 00d4               
+ 128 00d4 02602021		move	$a0, $s3
+ 129 00d8 02802821		move	$a1, $s4
+ 130 00dc 02003021		move	$a2, $s0
+ 131 00e0               
+ 132 00e0 0C000000		jal	generate_next
+ 133 00e4               
+ 134 00e4 02604021		move	$t0, $s3	#swap boards
+ 135 00e8 02809821		move	$s3, $s4
+ 136 00ec 0100A021		move	$s4, $t0
+ 137 00f0 22520001		addi	$s2, $s2, 1
+ 138 00f4 08000021		j	main_gen_loop
+ 139 00f8               
+ 140 00f8               
+ 141 00f8               main_done:
+ 142 00f8 8FBF0000		lw	$ra, 0($sp)
+ 143 00fc 23BD0004		addi	$sp, 4
+ 144 0100 03E00008		jr	$ra
+ 145 0104               
+ 146 0104               
+ 147 0104               	
+ 148 0104               	
 
 
 ASCII_A             = 00000041   
@@ -188,14 +196,14 @@ READ_INT            = 00000005
 banner                00000708 R  data 
 board_1               00000000 R  data 
 board_2               00000384 R  data 
-gen_end               00000762 R  data 
-gen_line              0000076C R  data 
-gen_start             0000074E R  data 
+gen_end               00000763 R  data 
+gen_line              0000076D R  data 
+gen_start             0000074F R  data 
 generate_next         ******** XG
 init_display          ******** XG
 main                  00000000 RG text 
-main_done             000000E0 R  text 
-main_gen_loop         0000006C R  text 
+main_done             000000F8 R  text 
+main_gen_loop         00000084 R  text 
 print_board           ******** XG
 prompt_board_size     ******** XG
 prompt_cells          ******** XG

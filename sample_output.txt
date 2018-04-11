@@ -1,0 +1,51 @@
+
+**********************
+****    Colony    ****
+**********************
+
+Enter board size: 
+WARNING: illegal board size, try again: 
+Enter number of generations to run: 
+WARNING: illegal number of generations, try again: 
+Enter number of live cells for colony A: 
+WARNING: illegal number of live cells, try again: 
+Start entering locations
+
+Enter number of live cells for colony B: 
+Start entering locations
+
+====    GENERATION 0    ====
++-----+
+|     |
+|B    |
+|B    |
+|B    |
+|  AAA|
++-----+
+
+====    GENERATION 1    ====
++-----+
+|   A |
+|     |
+|BB  B|
+|   A |
+|   A |
++-----+
+
+====    GENERATION 2    ====
++-----+
+|     |
+|B    |
+|B    |
+|B    |
+|  AAA|
++-----+
+
+====    GENERATION 3    ====
++-----+
+|   A |
+|     |
+|BB  B|
+|   A |
+|   A |
++-----+

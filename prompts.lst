@@ -31,268 +31,273 @@
           73697A65
           3A2000  
   29 0013               generation_prompt:
-  30 0013 456E7465		.asciiz "Enter number of generations to run: "
-          72206E75
-          6D626572
-          206F6620
-          67656E65
-          72617469
-  31 0038               live_cells_prompt:
-  32 0038 456E7465		.asciiz "Enter number of live cells for colony A: "
-          72206E75
-          6D626572
-          206F6620
-          6C697665
-          2063656C
-  33 0062               locations_prompt:
-  34 0062 53746172		.asciiz "Start entering locations\n"
-          7420656E
-          74657269
-          6E67206C
-          6F636174
-          696F6E73
-  35 007c               
-  36 007c               illegal_size:
-  37 007c 0A574152		.asciiz "\nWARNING: illegal board size, try again: "
+  30 0013 0A456E74		.asciiz "\nEnter number of generations to run: "
+          6572206E
+          756D6265
+          72206F66
+          2067656E
+          65726174
+  31 0039               live_cells_prompt:
+  32 0039 0A456E74		.asciiz "\nEnter number of live cells for colony A: "
+          6572206E
+          756D6265
+          72206F66
+          206C6976
+          65206365
+  33 0064               locations_prompt:
+  34 0064 0A537461		.asciiz "\nStart entering locations\n"
+          72742065
+          6E746572
+          696E6720
+          6C6F6361
+          74696F6E
+  35 007f               
+  36 007f               
+  37 007f               illegal_size:
+  38 007f 0A574152		.asciiz "\nWARNING: illegal board size, try again: "
           4E494E47
           3A20696C
           6C656761
           6C20626F
           61726420
-  38 00a6               illegal_generations:
-  39 00a6 0A574152		.asciiz "\nWARNING: illegal number of generations, try again: "
+  39 00a9               illegal_generations:
+  40 00a9 0A574152		.asciiz "\nWARNING: illegal number of generations, try again: "
           4E494E47
           3A20696C
           6C656761
           6C206E75
           6D626572
-  40 00db               illegal_live_cells:
-  41 00db 0A574152		.asciiz "\nWARNING: illegal number of live cells, try again: "
+  41 00de               illegal_live_cells:
+  42 00de 0A574152		.asciiz "\nWARNING: illegal number of live cells, try again: "
           4E494E47
           3A20696C
           6C656761
           6C206E75
           6D626572
-  42 010f               illegal_point:
-  43 010f 0A455252		.asciiz "\nERROR: illegal point location\n"
+  43 0112               illegal_point:
+  44 0112 0A455252		.asciiz "\nERROR: illegal point location\n"
           4F523A20
           696C6C65
           67616C20
           706F696E
           74206C6F
-  44 012f               
-  45 012f               
-  46 012f               #PROMPT ROUTINES
-  47 012f               
-  48 0000               	.text
-  49 0000               	.align 2
-  50 0000               	.globl prompt_board_size
-  51 0000               	.globl prompt_generations
-  52 0000               	.globl prompt_cells
-  53 0000               
+  45 0132               
+  46 0132               
+  47 0132               #PROMPT ROUTINES
+  48 0132               
+  49 0000               	.text
+  50 0000               	.align 2
+  51 0000               	.globl prompt_board_size
+  52 0000               	.globl prompt_generations
+  53 0000               	.globl prompt_cells
   54 0000               
-  55 0000               #----------------------------------------
-  56 0000               #Name:		prompt_board_size
-  57 0000               #Description: 	prompt the user for the board size
-  58 0000               #params: 	none
-  59 0000               #
-  60 0000               #returns:	v0: the size of the board entered
-  61 0000               #Destroys
-  62 0000               
-  63 0000               prompt_board_size:
-  64 0000 23BDFFFC		addi 	$sp, $sp, -4
-  65 0004 AFBF0000		sw 	$ra, 0($sp)
-  66 0008 34020004		li 	$v0, PRINT_STRING
-  67 000c 3C040000		la	$a0, size_prompt
+  55 0000               
+  56 0000               #----------------------------------------
+  57 0000               #Name:		prompt_board_size
+  58 0000               #Description: 	prompt the user for the board size
+  59 0000               #params: 	none
+  60 0000               #
+  61 0000               #returns:	v0: the size of the board entered
+  62 0000               #Destroys
+  63 0000               
+  64 0000               prompt_board_size:
+  65 0000 23BDFFFC		addi 	$sp, $sp, -4
+  66 0004 AFBF0000		sw 	$ra, 0($sp)
+  67 0008 34020004		li 	$v0, PRINT_STRING
+  68 000c 3C040000		la	$a0, size_prompt
      0010 34840000
-  68 0014 0000000C		syscall
-  69 0018 34020005		li 	$v0, READ_INT
-  70 001c 0000000C		syscall
-  71 0020               
-  72 0020               bad_size_check:
-  73 0020 28480004		slti 	$t0, $v0, MIN_BOARD_SIZE
-  74 0024 340A001E		li	$t2, MAX_BOARD_SIZE
-  75 0028 0142482A		slt	$t1, $t2, $v0
-  76 002c 01095025		or	$t2, $t0, $t1
-  77 0030 11400007		beq 	$t2, $zero, prompt_board_done
-  78 0034               
-  79 0034 34020004		li	$v0, PRINT_STRING
-  80 0038 3C040000		la	$a0, illegal_size
+  69 0014 0000000C		syscall
+  70 0018 34020005		li 	$v0, READ_INT
+  71 001c 0000000C		syscall
+  72 0020               
+  73 0020               bad_size_check:
+  74 0020 28480004		slti 	$t0, $v0, MIN_BOARD_SIZE
+  75 0024 340A001E		li	$t2, MAX_BOARD_SIZE
+  76 0028 0142482A		slt	$t1, $t2, $v0
+  77 002c 01095025		or	$t2, $t0, $t1
+  78 0030 11400007		beq 	$t2, $zero, prompt_board_done	#if size is in bounds, we're done
+  79 0034               
+  80 0034 34020004		li	$v0, PRINT_STRING		#else, print error and prompt for size again
+  81 0038 3C040000		la	$a0, illegal_size
      003c 34840000
-  81 0040 0000000C		syscall
-  82 0044 34020005		li 	$v0, READ_INT
-  83 0048 0000000C		syscall
-  84 004c 08000008		j 	bad_size_check
-  85 0050               	
-  86 0050               prompt_board_done:
-  87 0050 8FBF0000		lw	$ra, 0($sp)
-  88 0054 23BD0004		addi	$sp, $sp, 4
-  89 0058 03E00008		jr	$ra
-  90 005c               
-  91 005c               #----------------------------------------
-  92 005c               #Name: 		prompt_generations
-  93 005c               #Description: 	prompt the user for the number of generations
-  94 005c               #params:	none
-  95 005c               #
-  96 005c               #returns: 	v0: the number of generations entered
-  97 005c               
-  98 005c               #destroys
-  99 005c               
- 100 005c               prompt_generations:
- 101 005c 23BDFFFC		addi 	$sp, $sp, -4
- 102 0060 AFBF0000		sw 	$ra, 0($sp)
- 103 0064               
- 104 0064 34020004		li	$v0, PRINT_STRING
- 105 0068 3C040000		la	$a0, generation_prompt
+  82 0040 0000000C		syscall
+  83 0044 34020005		li 	$v0, READ_INT
+  84 0048 0000000C		syscall
+  85 004c 08000008		j 	bad_size_check
+  86 0050               	
+  87 0050               prompt_board_done:
+  88 0050 8FBF0000		lw	$ra, 0($sp)
+  89 0054 23BD0004		addi	$sp, $sp, 4
+  90 0058 03E00008		jr	$ra
+  91 005c               
+  92 005c               #----------------------------------------
+  93 005c               #Name: 		prompt_generations
+  94 005c               #Description: 	prompt the user for the number of generations
+  95 005c               #params:	none
+  96 005c               #
+  97 005c               #returns: 	v0: the number of generations entered
+  98 005c               
+  99 005c               #destroys
+ 100 005c               
+ 101 005c               prompt_generations:
+ 102 005c 23BDFFFC		addi 	$sp, $sp, -4
+ 103 0060 AFBF0000		sw 	$ra, 0($sp)
+ 104 0064               
+ 105 0064 34020004		li	$v0, PRINT_STRING
+ 106 0068 3C040000		la	$a0, generation_prompt
      006c 34840000
- 106 0070 0000000C		syscall
- 107 0074               
- 108 0074 34020005		li 	$v0, READ_INT
- 109 0078 0000000C		syscall
- 110 007c               
- 111 007c               bad_generation_check:
- 112 007c 28480000		slti	$t0, $v0, MIN_GENERATIONS
- 113 0080 340A0014		li 	$t2, MAX_GENERATIONS
- 114 0084 0142482A		slt	$t1, $t2, $v0
- 115 0088 01095025		or	$t2, $t0, $t1
- 116 008c 11400007		beq 	$t2, $zero, prompt_generations_done
- 117 0090               
- 118 0090 34020004		li 	$v0, PRINT_STRING
- 119 0094 3C040000		la	$a0, illegal_generations
+ 107 0070 0000000C		syscall
+ 108 0074               
+ 109 0074 34020005		li 	$v0, READ_INT
+ 110 0078 0000000C		syscall
+ 111 007c               
+ 112 007c               bad_generation_check:
+ 113 007c 28480000		slti	$t0, $v0, MIN_GENERATIONS
+ 114 0080 340A0014		li 	$t2, MAX_GENERATIONS
+ 115 0084 0142482A		slt	$t1, $t2, $v0
+ 116 0088 01095025		or	$t2, $t0, $t1
+ 117 008c 11400007		beq 	$t2, $zero, prompt_generations_done	#if generations is in bounds, we're done
+ 118 0090               
+ 119 0090 34020004		li 	$v0, PRINT_STRING			#else, print error and prompt generations again
+ 120 0094 3C040000		la	$a0, illegal_generations
      0098 34840000
- 120 009c 0000000C		syscall
- 121 00a0               
- 122 00a0 34020005		li	$v0, READ_INT
- 123 00a4 0000000C		syscall
- 124 00a8 0800001F		j 	bad_generation_check
- 125 00ac               
- 126 00ac               prompt_generations_done:
- 127 00ac 8FBF0000		lw	$ra, 0($sp)
- 128 00b0 23BD0004		addi 	$sp, $sp, 4
- 129 00b4 03E00008		jr	$ra
- 130 00b8               
- 131 00b8               #----------------------------------------
- 132 00b8               #Name:	prompt_cells
- 133 00b8               #Description:	prompt the user for the number of live
- 134 00b8               #		cells and their locations	
- 135 00b8               #params:	a0 the address of the board to use
- 136 00b8               #		a1 the size of the board
- 137 00b8               #		a2 the ASCII character code used to fill the board
- 138 00b8               #returns:	v0 zero if success, 1 if error processing
- 139 00b8               
- 140 00b8               prompt_cells:
- 141 00b8 23BDFFE0		addi	$sp, $sp, -32
- 142 00bc AFB00000		sw	$s0, 0($sp)
- 143 00c0 AFB10004		sw	$s1, 4($sp)
- 144 00c4 AFB20008		sw	$s2, 8($sp)
- 145 00c8 AFB3000C		sw	$s3, 12($sp)
- 146 00cc AFB40010		sw	$s4, 16($sp)
- 147 00d0 AFB50014		sw	$s5, 20($sp)
- 148 00d4 AFB60018		sw	$s6, 24($sp)
- 149 00d8 AFBF001C		sw	$ra, 28($sp)
- 150 00dc               
- 151 00dc 00808021		move	$s0, $a0
- 152 00e0 00A08821		move	$s1, $a1
- 153 00e4 00C09021		move	$s2, $a2
- 154 00e8               
+ 121 009c 0000000C		syscall
+ 122 00a0               
+ 123 00a0 34020005		li	$v0, READ_INT
+ 124 00a4 0000000C		syscall
+ 125 00a8 0800001F		j 	bad_generation_check
+ 126 00ac               
+ 127 00ac               prompt_generations_done:
+ 128 00ac 8FBF0000		lw	$ra, 0($sp)
+ 129 00b0 23BD0004		addi 	$sp, $sp, 4
+ 130 00b4 03E00008		jr	$ra
+ 131 00b8               
+ 132 00b8               #----------------------------------------
+ 133 00b8               #Name:	prompt_cells
+ 134 00b8               #Description:	prompt the user for the number of live
+ 135 00b8               #		cells and their locations	
+ 136 00b8               #params:	a0 the address of the board to use
+ 137 00b8               #		a1 the size of the board
+ 138 00b8               #		a2 the ASCII character code used to fill the board
+ 139 00b8               #returns:	v0 zero if success, 1 if error processing
+ 140 00b8               
+ 141 00b8               prompt_cells:
+ 142 00b8 23BDFFE0		addi	$sp, $sp, -32
+ 143 00bc AFB00000		sw	$s0, 0($sp)
+ 144 00c0 AFB10004		sw	$s1, 4($sp)
+ 145 00c4 AFB20008		sw	$s2, 8($sp)
+ 146 00c8 AFB3000C		sw	$s3, 12($sp)
+ 147 00cc AFB40010		sw	$s4, 16($sp)
+ 148 00d0 AFB50014		sw	$s5, 20($sp)
+ 149 00d4 AFB60018		sw	$s6, 24($sp)
+ 150 00d8 AFBF001C		sw	$ra, 28($sp)
+ 151 00dc               
+ 152 00dc 00808021		move	$s0, $a0
+ 153 00e0 00A08821		move	$s1, $a1
+ 154 00e4 00C09021		move	$s2, $a2
  155 00e8               
- 156 00e8 34020004		li	$v0, PRINT_STRING
- 157 00ec 3C040000		la	$a0, live_cells_prompt
+ 156 00e8               
+ 157 00e8 34020004		li	$v0, PRINT_STRING
+ 158 00ec 3C040000		la	$a0, live_cells_prompt
      00f0 34840000
- 158 00f4               	
- 159 00f4 20880026		addi	$t0, $a0, 38		#adjust ASCII character at prompt
- 160 00f8 A1120000		sb	$s2, 0($t0)
- 161 00fc               	
- 162 00fc 0000000C		syscall
- 163 0100               	
- 164 0100 34020005		li 	$v0, READ_INT
- 165 0104 0000000C		syscall
- 166 0108               
- 167 0108               bad_alive_check:
- 168 0108 0040402A		slt	$t0, $v0, $zero
- 169 010c 02205021		move 	$t2, $s1
- 170 0110 014A0018		mul 	$t2, $t2, $t2
+ 159 00f4               	
+ 160 00f4 20880027		addi	$t0, $a0, 39		#adjust ASCII character at prompt to be 'A' or 'B'
+ 161 00f8 A1120000		sb	$s2, 0($t0)
+ 162 00fc               	
+ 163 00fc 0000000C		syscall
+ 164 0100               	
+ 165 0100 34020005		li 	$v0, READ_INT
+ 166 0104 0000000C		syscall
+ 167 0108               
+ 168 0108               bad_alive_check:
+ 169 0108 0040402A		slt	$t0, $v0, $zero			#check for cells_alive < 0
+ 170 010c 02205021		move 	$t2, $s1
+ 171 0110 014A0018		mul 	$t2, $t2, $t2
      0114 00005012
- 171 0118 0142482A		slt	$t1, $t2, $v0
- 172 011c 01094025		or	$t0, $t0, $t1
- 173 0120 11000007		beq	$t0, $zero, prompt_locations
- 174 0124               
- 175 0124 34020004		li 	$v0, PRINT_STRING
- 176 0128 3C040000		la	$a0, illegal_live_cells
+ 172 0118 0142482A		slt	$t1, $t2, $v0			#check for cells_alive > board_size
+ 173 011c 01094025		or	$t0, $t0, $t1
+ 174 0120 11000007		beq	$t0, $zero, prompt_locations	#if cells_alive is in bounds, we're done
+ 175 0124               
+ 176 0124 34020004		li 	$v0, PRINT_STRING		#else, print error and prompt again
+ 177 0128 3C040000		la	$a0, illegal_live_cells
      012c 34840000
- 177 0130 0000000C		syscall
- 178 0134               
- 179 0134 34020005		li	$v0, READ_INT
- 180 0138 0000000C		syscall
- 181 013c               
- 182 013c 08000042		j 	bad_alive_check
- 183 0140               
- 184 0140               prompt_locations:	
- 185 0140 00409821		move	$s3, $v0
- 186 0144 34020004		li 	$v0, PRINT_STRING
- 187 0148 3C040000		la	$a0, locations_prompt
+ 178 0130 0000000C		syscall
+ 179 0134               
+ 180 0134 34020005		li	$v0, READ_INT
+ 181 0138 0000000C		syscall
+ 182 013c               
+ 183 013c 08000042		j 	bad_alive_check
+ 184 0140               
+ 185 0140               prompt_locations:	
+ 186 0140 00409821		move	$s3, $v0
+ 187 0144 34020004		li 	$v0, PRINT_STRING
+ 188 0148 3C040000		la	$a0, locations_prompt
      014c 34840000
- 188 0150 0000000C		syscall
- 189 0154               
- 190 0154               locations_loop:
- 191 0154 1260001E		beq	$s3, $zero, locations_done
- 192 0158               
- 193 0158 34020005		li	$v0, READ_INT
- 194 015c 0000000C		syscall
- 195 0160 0040A021		move	$s4, $v0
- 196 0164               
- 197 0164 34020005		li	$v0, READ_INT
- 198 0168 0000000C		syscall
- 199 016c 0040A821		move	$s5, $v0
- 200 0170               
- 201 0170 0280402A		slt	$t0, $s4, $zero		#check for negative indices
- 202 0174 02A0482A		slt	$t1, $s5, $zero
- 203 0178 01094025		or	$t0, $t0, $t1
- 204 017c 1500000F		bne	$t0, $zero, coord_error
- 205 0180               
- 206 0180 0291402A		slt	$t0, $s4, $s1		#check for indices that are too large
- 207 0184 02B1482A		slt	$t1, $s5, $s1
- 208 0188 01094024		and	$t0, $t0, $t1
- 209 018c 1100000B		beq	$t0, $zero, coord_error
- 210 0190               
- 211 0190 3419001E		li	$t9, MAX_BOARD_SIZE
- 212 0194 03340018		mul	$t0, $t9, $s4		#get proper offset into 1-D array
-     0198 00004012
- 213 019c 02084820		add	$t1, $s0, $t0
- 214 01a0 01354820		add	$t1, $t1, $s5		#index into column
- 215 01a4               
- 216 01a4 81280000		lb	$t0, 0($t1)
- 217 01a8 15000004		bne	$t0, $zero, coord_error	#cell is occupied
- 218 01ac               
- 219 01ac A1320000		sb	$s2, 0($t1)		#load character into array
- 220 01b0               
- 221 01b0 2273FFFF		addi	$s3, $s3, -1		#decrement count
- 222 01b4 00001021		move	$v0, $zero		#set v0 to zero to indicate success in
- 223 01b8               					#case this is the last loop
- 224 01b8 08000055		j 	locations_loop
- 225 01bc               
- 226 01bc               
- 227 01bc               coord_error:	
- 228 01bc 34020004		li	$v0, PRINT_STRING
- 229 01c0 3C040000		la	$a0, illegal_point
-     01c4 34840000
- 230 01c8 0000000C		syscall
- 231 01cc 34020001		li	$v0, 1
- 232 01d0               	
- 233 01d0               locations_done:
- 234 01d0 8FB00000		lw	$s0, 0($sp)
- 235 01d4 8FB10004		lw	$s1, 4($sp)
- 236 01d8 8FB20008		lw	$s2, 8($sp)
- 237 01dc 8FB3000C		lw	$s3, 12($sp)
- 238 01e0 8FB40010		lw	$s4, 16($sp)
- 239 01e4 8FB50014		lw	$s5, 20($sp)
- 240 01e8 8FB60018		lw	$s6, 24($sp)
- 241 01ec 8FBF001C		lw	$ra, 28($sp)
- 242 01f0               
- 243 01f0 23BD0020		addi	$sp, $sp, 32
- 244 01f4 03E00008		jr	$ra
- 245 01f8               
- 246 01f8               
+ 189 0150 0000000C		syscall
+ 190 0154               
+ 191 0154               #
+ 192 0154               #Loop to prompt user for cell locations
+ 193 0154               #
+ 194 0154               locations_loop:
+ 195 0154 00001021		move	$v0, $zero
+ 196 0158 1260001E		beq	$s3, $zero, locations_done
+ 197 015c               
+ 198 015c 34020005		li	$v0, READ_INT
+ 199 0160 0000000C		syscall
+ 200 0164 0040A021		move	$s4, $v0		#s4 = row index
+ 201 0168               
+ 202 0168 34020005		li	$v0, READ_INT
+ 203 016c 0000000C		syscall
+ 204 0170 0040A821		move	$s5, $v0		#s5 = col index
+ 205 0174               
+ 206 0174 0280402A		slt	$t0, $s4, $zero		#check for negative indices
+ 207 0178 02A0482A		slt	$t1, $s5, $zero
+ 208 017c 01094025		or	$t0, $t0, $t1
+ 209 0180 1500000F		bne	$t0, $zero, coord_error
+ 210 0184               
+ 211 0184 0291402A		slt	$t0, $s4, $s1		#check for indices that are too large
+ 212 0188 02B1482A		slt	$t1, $s5, $s1
+ 213 018c 01094024		and	$t0, $t0, $t1
+ 214 0190 1100000B		beq	$t0, $zero, coord_error
+ 215 0194               
+ 216 0194 3419001E		li	$t9, MAX_BOARD_SIZE
+ 217 0198 03340018		mul	$t0, $t9, $s4		#get proper offset into 1-D array
+     019c 00004012
+ 218 01a0 02084820		add	$t1, $s0, $t0
+ 219 01a4 01354820		add	$t1, $t1, $s5		#index into column
+ 220 01a8               
+ 221 01a8 81280000		lb	$t0, 0($t1)
+ 222 01ac 15000004		bne	$t0, $zero, coord_error	#cell is occupied
+ 223 01b0               
+ 224 01b0 A1320000		sb	$s2, 0($t1)		#load character into array
+ 225 01b4               
+ 226 01b4 2273FFFF		addi	$s3, $s3, -1		#decrement count
+ 227 01b8 00001021		move	$v0, $zero		#set v0 to zero to indicate success in
+ 228 01bc               					#case this is the last loop
+ 229 01bc 08000055		j 	locations_loop
+ 230 01c0               
+ 231 01c0               
+ 232 01c0               coord_error:	
+ 233 01c0 34020004		li	$v0, PRINT_STRING
+ 234 01c4 3C040000		la	$a0, illegal_point
+     01c8 34840000
+ 235 01cc 0000000C		syscall
+ 236 01d0 34020001		li	$v0, 1
+ 237 01d4               	
+ 238 01d4               locations_done:
+ 239 01d4 8FB00000		lw	$s0, 0($sp)
+ 240 01d8 8FB10004		lw	$s1, 4($sp)
+ 241 01dc 8FB20008		lw	$s2, 8($sp)
+ 242 01e0 8FB3000C		lw	$s3, 12($sp)
+ 243 01e4 8FB40010		lw	$s4, 16($sp)
+ 244 01e8 8FB50014		lw	$s5, 20($sp)
+ 245 01ec 8FB60018		lw	$s6, 24($sp)
+ 246 01f0 8FBF001C		lw	$ra, 28($sp)
+ 247 01f4               
+ 248 01f4 23BD0020		addi	$sp, $sp, 32
+ 249 01f8 03E00008		jr	$ra
+ 250 01fc               
+ 251 01fc               
 
 
 MAX_BOARD_SIZE           = 0000001E   
@@ -304,16 +309,16 @@ READ_INT                 = 00000005
 bad_alive_check            00000108 R  text 
 bad_generation_check       0000007C R  text 
 bad_size_check             00000020 R  text 
-coord_error                000001BC R  text 
+coord_error                000001C0 R  text 
 generation_prompt          00000013 R  data 
-illegal_generations        000000A6 R  data 
-illegal_live_cells         000000DB R  data 
-illegal_point              0000010F R  data 
-illegal_size               0000007C R  data 
-live_cells_prompt          00000038 R  data 
-locations_done             000001D0 R  text 
+illegal_generations        000000A9 R  data 
+illegal_live_cells         000000DE R  data 
+illegal_point              00000112 R  data 
+illegal_size               0000007F R  data 
+live_cells_prompt          00000039 R  data 
+locations_done             000001D4 R  text 
 locations_loop             00000154 R  text 
-locations_prompt           00000062 R  data 
+locations_prompt           00000064 R  data 
 prompt_board_done          00000050 R  text 
 prompt_board_size          00000000 RG text 
 prompt_cells               000000B8 RG text 

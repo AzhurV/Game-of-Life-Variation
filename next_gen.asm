@@ -276,6 +276,9 @@ store_dead:
 	sb	$zero, 0($s6)
 	j 	check_cell_done
 
+#
+#Check if current cell will 
+#	
 check_cur_dead:
 	li	$t9, 3
 	sub	$t2, $v1, $v0

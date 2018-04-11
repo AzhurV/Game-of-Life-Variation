@@ -1,0 +1,43 @@
+**********************
+****    Colony    ****
+**********************
+Enter board size: Enter number of generations to run: Enter number of live cells for colony A: Start entering locations
+
+ERROR: illegal point location
+Enter number of live cells for colony B: Start entering locations
+====    GENERATION 0    ====
++-----+
+|     |
+|B    |
+|B  B |
+|    B|
+|     |
++-----+
+
+====    GENERATION 1    ====
++-----+
+|     |
+|    B|
+|B    |
+|    B|
+|     |
++-----+
+
+====    GENERATION 2    ====
++-----+
+|     |
+|     |
+|B   B|
+|     |
+|     |
++-----+
+
+====    GENERATION 3    ====
++-----+
+|     |
+|     |
+|     |
+|     |
+|     |
++-----+
+

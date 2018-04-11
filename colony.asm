@@ -28,7 +28,7 @@ PRINT_STRING 	= 4
 READ_INT 	= 5
 ASCII_A 	= 65	
 ASCII_B 	= 66
-
+	
 	
 #DATA AREAS
 	.data
@@ -40,9 +40,9 @@ board_2:
 	
 
 banner:
-	.ascii "**********************\n"
+	.ascii "\n**********************\n"
 	.ascii "****    Colony    ****\n"
-	.asciiz "**********************\n"
+	.asciiz "**********************\n\n"
 gen_start:
 	.asciiz "====    GENERATION "
 gen_end:
@@ -81,12 +81,19 @@ main:
 	move 	$a1, $s0
 	li	$a2, ASCII_A
 	jal 	prompt_cells
+	bne	$v0, $zero, main_done
+
 
 	la	$a0, board_1
 	move	$a1, $s0
 	li	$a2, ASCII_B
 	jal 	prompt_cells
+	bne	$v0, $zero, main_done
 
+	li 	$v0, PRINT_STRING
+	la	$a0, gen_line
+	syscall
+	
 	move	$a0, $s0
 	jal 	init_display
 
@@ -133,9 +140,11 @@ main_gen_loop:
 
 
 main_done:
+	
 	lw	$ra, 0($sp)
 	addi	$sp, 4
 	jr	$ra
+
 
 	
 	

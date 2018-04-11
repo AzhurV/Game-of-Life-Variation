@@ -27,11 +27,12 @@ READ_INT 	= 5
 size_prompt:
 	.asciiz "Enter board size: "
 generation_prompt:
-	.asciiz "Enter number of generations to run: "
+	.asciiz "\nEnter number of generations to run: "
 live_cells_prompt:
-	.asciiz "Enter number of live cells for colony A: "
+	.asciiz "\nEnter number of live cells for colony A: "
 locations_prompt:
-	.asciiz "Start entering locations\n"
+	.asciiz "\nStart entering locations\n"
+
 
 illegal_size:
 	.asciiz "\nWARNING: illegal board size, try again: "
@@ -74,9 +75,9 @@ bad_size_check:
 	li	$t2, MAX_BOARD_SIZE
 	slt	$t1, $t2, $v0
 	or	$t2, $t0, $t1
-	beq 	$t2, $zero, prompt_board_done
+	beq 	$t2, $zero, prompt_board_done	#if size is in bounds, we're done
 
-	li	$v0, PRINT_STRING
+	li	$v0, PRINT_STRING		#else, print error and prompt for size again
 	la	$a0, illegal_size
 	syscall
 	li 	$v0, READ_INT
@@ -113,9 +114,9 @@ bad_generation_check:
 	li 	$t2, MAX_GENERATIONS
 	slt	$t1, $t2, $v0
 	or	$t2, $t0, $t1
-	beq 	$t2, $zero, prompt_generations_done
+	beq 	$t2, $zero, prompt_generations_done	#if generations is in bounds, we're done
 
-	li 	$v0, PRINT_STRING
+	li 	$v0, PRINT_STRING			#else, print error and prompt generations again
 	la	$a0, illegal_generations
 	syscall
 
@@ -156,7 +157,7 @@ prompt_cells:
 	li	$v0, PRINT_STRING
 	la	$a0, live_cells_prompt
 	
-	addi	$t0, $a0, 38		#adjust ASCII character at prompt
+	addi	$t0, $a0, 39		#adjust ASCII character at prompt to be 'A' or 'B'
 	sb	$s2, 0($t0)
 	
 	syscall
@@ -165,14 +166,14 @@ prompt_cells:
 	syscall
 
 bad_alive_check:
-	slt	$t0, $v0, $zero
+	slt	$t0, $v0, $zero			#check for cells_alive < 0
 	move 	$t2, $s1
 	mul 	$t2, $t2, $t2
-	slt	$t1, $t2, $v0
+	slt	$t1, $t2, $v0			#check for cells_alive > board_size
 	or	$t0, $t0, $t1
-	beq	$t0, $zero, prompt_locations
+	beq	$t0, $zero, prompt_locations	#if cells_alive is in bounds, we're done
 
-	li 	$v0, PRINT_STRING
+	li 	$v0, PRINT_STRING		#else, print error and prompt again
 	la	$a0, illegal_live_cells
 	syscall
 
@@ -187,16 +188,20 @@ prompt_locations:
 	la	$a0, locations_prompt
 	syscall
 
+#
+#Loop to prompt user for cell locations
+#
 locations_loop:
+	move	$v0, $zero
 	beq	$s3, $zero, locations_done
 
 	li	$v0, READ_INT
 	syscall
-	move	$s4, $v0
+	move	$s4, $v0		#s4 = row index
 
 	li	$v0, READ_INT
 	syscall
-	move	$s5, $v0
+	move	$s5, $v0		#s5 = col index
 
 	slt	$t0, $s4, $zero		#check for negative indices
 	slt	$t1, $s5, $zero

@@ -1,0 +1,11 @@
+
+**********************
+****    Colony    ****
+**********************
+
+Enter board size: 
+Enter number of generations to run: 
+Enter number of live cells for colony A: 
+Start entering locations
+
+ERROR: illegal point location

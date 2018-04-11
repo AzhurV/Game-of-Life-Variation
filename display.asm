@@ -43,42 +43,49 @@ edge_buffer:
 
 init_display:
 
-	la	$t1, edge_buffer
+	la	$t1, edge_buffer	#load buffer for top/bottom of board
 	li	$t0, ASCII_PLUS
-	sb	$t0, 0($t1)
+	sb	$t0, 0($t1)		#store plus at left edge
 	addi	$t1, $t1, 1
 
 	move	$t2, $a0
 	li	$t3, ASCII_MIN
 
+#
+#Fill the center of the edge buffer with '-' characacters
+#
 edge_fill_center:
 	beq	$t2, $zero, edge_done
 
-	sb	$t3, 0($t1)
+	sb	$t3, 0($t1)		#store '-' at the current location in buffer
 	addi	$t1, $t1, 1
 	addi	$t2, $t2, -1
 	j 	edge_fill_center
 
 edge_done:
-	sb	$t0, 0($t1)
+	sb	$t0, 0($t1)		#store '+' at right
 	addi	$t1, $t1, 1
-	li	$t3, ASCII_NEWLINE
+	li	$t3, ASCII_NEWLINE	#store newline
 	sb	$t3, 0($t1)
 	addi	$t1, $t1, 1
-	sb	$zero, 0($t1)
+	sb	$zero, 0($t1)		#store null terminator
 
-	la	$t1, buffer
+	
+	la	$t1, buffer		#load buffer for inner parts of board
 	li	$t0, ASCII_BAR
-	sb	$t0, 0($t1)
+	sb	$t0, 0($t1)		#store bar at left edge of buffer
 	addi	$t1, $t1, 1
 
 	move	$t2, $a0
 	li	$t3, ASCII_SPACE
 
+#
+#Fill center of buffer with spaces
+#	
 buf_fill_center:
 	beq	$t2, $zero, buf_done
 
-	sb	$t3, 0($t1)
+	sb	$t3, 0($t1)		#store space in buffer
 	addi	$t1, $t1, 1
 	addi	$t2, $t2, -1
 	j 	buf_fill_center
@@ -122,7 +129,10 @@ print_board:
 	syscall
 
 	move	$s3, $s1
-	
+
+#
+#Loop for displaying row of the matrix
+#	
 display_row_loop:
 	beq	$s3, $zero, row_loop_done
 	move	$s2, $s0
@@ -130,11 +140,14 @@ display_row_loop:
 	la	$s5, buffer
 	addi	$s5, $s5, 1
 
+#
+#Loop for displaying each column of matrix
+#	
 display_col_loop:
 	beq	$s4, $zero, col_loop_done
 
 	lb	$t0, 0($s2)
-	beq	$t0, $zero, write_space
+	beq	$t0, $zero, write_space		#if the value in the board is 0, write a blank space
 	sb	$t0, 0($s5)
 	addi	$s5, $s5, 1
 	addi	$s2, $s2, 1

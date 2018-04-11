@@ -278,54 +278,57 @@
  276 0238 A2C00000		sb	$zero, 0($s6)
  277 023c 0800009C		j 	check_cell_done
  278 0240               
- 279 0240               check_cur_dead:
- 280 0240 34190003		li	$t9, 3
- 281 0244 00625022		sub	$t2, $v1, $v0
- 282 0248 11590004		beq	$t2, $t9, dead_store_B
- 283 024c               
- 284 024c 00435022		sub	$t2, $v0, $v1
- 285 0250 11590005		beq	$t2, $t9, dead_store_A
- 286 0254               
- 287 0254 A2C00000		sb	$zero, 0($s6)
- 288 0258 0800009C		j	check_cell_done
- 289 025c               
- 290 025c               dead_store_B:
- 291 025c 34090042		li	$t1, ASCII_B
- 292 0260 A2C90000		sb	$t1, 0($s6)
- 293 0264 0800009C		j	check_cell_done
- 294 0268               
- 295 0268               dead_store_A:
- 296 0268 34090041		li	$t1, ASCII_A
- 297 026c A2C90000		sb	$t1, 0($s6)
- 298 0270               
- 299 0270               check_cell_done:
- 300 0270 22940001		addi	$s4, $s4, 1	#increment col
- 301 0274 22B50001		addi	$s5, $s5, 1	#increment current element in boards
- 302 0278 22D60001		addi	$s6, $s6, 1
- 303 027c 08000079		j	gen_col_loop
- 304 0280               
- 305 0280               	
- 306 0280               gen_col_done:
- 307 0280 22730001		addi	$s3, $s3, 1
- 308 0284 0800006F		j	gen_row_loop
- 309 0288               
- 310 0288               gen_row_done:
- 311 0288 8FB00000		lw	$s0, 0($sp)
- 312 028c 8FB10004		lw	$s1, 4($sp)
- 313 0290 8FB20008		lw	$s2, 8($sp)
- 314 0294 8FB3000C		lw	$s3, 12($sp)
- 315 0298 8FB40010		lw	$s4, 16($sp)
- 316 029c 8FB50014		lw	$s5, 20($sp)
- 317 02a0 8FB60018		lw	$s6, 24($sp)
- 318 02a4 8FB7001C		lw	$s7, 28($sp)
- 319 02a8 8FBF0020		lw	$ra, 32($sp)
- 320 02ac               
- 321 02ac 23BD0024		addi	$sp, $sp, 36
- 322 02b0               
- 323 02b0 03E00008		jr	$ra
- 324 02b4               
- 325 02b4               #----------------------------------------
- 326 02b4               	
+ 279 0240               #
+ 280 0240               #Check if current cell will 
+ 281 0240               #	
+ 282 0240               check_cur_dead:
+ 283 0240 34190003		li	$t9, 3
+ 284 0244 00625022		sub	$t2, $v1, $v0
+ 285 0248 11590004		beq	$t2, $t9, dead_store_B
+ 286 024c               
+ 287 024c 00435022		sub	$t2, $v0, $v1
+ 288 0250 11590005		beq	$t2, $t9, dead_store_A
+ 289 0254               
+ 290 0254 A2C00000		sb	$zero, 0($s6)
+ 291 0258 0800009C		j	check_cell_done
+ 292 025c               
+ 293 025c               dead_store_B:
+ 294 025c 34090042		li	$t1, ASCII_B
+ 295 0260 A2C90000		sb	$t1, 0($s6)
+ 296 0264 0800009C		j	check_cell_done
+ 297 0268               
+ 298 0268               dead_store_A:
+ 299 0268 34090041		li	$t1, ASCII_A
+ 300 026c A2C90000		sb	$t1, 0($s6)
+ 301 0270               
+ 302 0270               check_cell_done:
+ 303 0270 22940001		addi	$s4, $s4, 1	#increment col
+ 304 0274 22B50001		addi	$s5, $s5, 1	#increment current element in boards
+ 305 0278 22D60001		addi	$s6, $s6, 1
+ 306 027c 08000079		j	gen_col_loop
+ 307 0280               
+ 308 0280               	
+ 309 0280               gen_col_done:
+ 310 0280 22730001		addi	$s3, $s3, 1
+ 311 0284 0800006F		j	gen_row_loop
+ 312 0288               
+ 313 0288               gen_row_done:
+ 314 0288 8FB00000		lw	$s0, 0($sp)
+ 315 028c 8FB10004		lw	$s1, 4($sp)
+ 316 0290 8FB20008		lw	$s2, 8($sp)
+ 317 0294 8FB3000C		lw	$s3, 12($sp)
+ 318 0298 8FB40010		lw	$s4, 16($sp)
+ 319 029c 8FB50014		lw	$s5, 20($sp)
+ 320 02a0 8FB60018		lw	$s6, 24($sp)
+ 321 02a4 8FB7001C		lw	$s7, 28($sp)
+ 322 02a8 8FBF0020		lw	$ra, 32($sp)
+ 323 02ac               
+ 324 02ac 23BD0024		addi	$sp, $sp, 36
+ 325 02b0               
+ 326 02b0 03E00008		jr	$ra
+ 327 02b4               
+ 328 02b4               #----------------------------------------
+ 329 02b4               	
 
 
 ASCII_A              = 00000041   
